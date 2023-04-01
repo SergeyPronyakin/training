@@ -1,1 +1,1 @@
-# training
+This project should help me to brush up my programming skills
