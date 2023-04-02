@@ -11,14 +11,19 @@ class UntitledTestCase(unittest.TestCase):
         self.wd.implicitly_wait(30)
 
     def test_untitled_test_case(self):
-        dw = self.wd
-        dw.get("http://localhost/addressbook/")
-        dw.find_element_by_name("user").clear()
-        dw.find_element_by_name("user").send_keys("admin")
-        dw.find_element_by_name("pass").click()
-        dw.find_element_by_name("pass").clear()
-        dw.find_element_by_name("pass").send_keys("secret")
-        dw.find_element_by_xpath("//input[@value='Login']").click()
+        dw = self.open_main_page()
+        self.login(dw)
+        self.create_group(dw)
+        self.return_to_the_group_page(dw)
+        self.logout(dw)
+
+    def return_to_the_group_page(self, dw):
+        dw.find_element_by_link_text("group page").click()
+
+    def logout(self, dw):
+        dw.find_element_by_link_text("Logout").click()
+
+    def create_group(self, dw):
         dw.find_element_by_link_text("groups").click()
         dw.find_element_by_name("new").click()
         dw.find_element_by_name("group_name").click()
@@ -31,8 +36,19 @@ class UntitledTestCase(unittest.TestCase):
         dw.find_element_by_name("group_footer").clear()
         dw.find_element_by_name("group_footer").send_keys("test2")
         dw.find_element_by_name("submit").click()
-        dw.find_element_by_link_text("group page").click()
-        dw.find_element_by_link_text("Logout").click()
+
+    def login(self, dw):
+        dw.find_element_by_name("user").clear()
+        dw.find_element_by_name("user").send_keys("admin")
+        dw.find_element_by_name("pass").click()
+        dw.find_element_by_name("pass").clear()
+        dw.find_element_by_name("pass").send_keys("secret")
+        dw.find_element_by_xpath("//input[@value='Login']").click()
+
+    def open_main_page(self):
+        dw = self.wd
+        dw.get("http://localhost/addressbook/")
+        return dw
 
     def is_element_present(self, how, what):
         try:
