@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest
+from group import Group
 
 
 class UntitledTestCase(unittest.TestCase):
@@ -13,7 +14,7 @@ class UntitledTestCase(unittest.TestCase):
     def test_untitled_test_case(self):
         dw = self.open_main_page()
         self.login(dw)
-        self.create_group(dw)
+        self.create_group(dw, Group(name="test_name", header="header", footer="footer"))
         self.return_to_the_group_page(dw)
         self.logout(dw)
 
@@ -23,18 +24,18 @@ class UntitledTestCase(unittest.TestCase):
     def logout(self, dw):
         dw.find_element_by_link_text("Logout").click()
 
-    def create_group(self, dw):
+    def create_group(self, dw, group):
         dw.find_element_by_link_text("groups").click()
         dw.find_element_by_name("new").click()
         dw.find_element_by_name("group_name").click()
         dw.find_element_by_name("group_name").clear()
-        dw.find_element_by_name("group_name").send_keys("name")
+        dw.find_element_by_name("group_name").send_keys(group.name)
         dw.find_element_by_name("group_header").click()
         dw.find_element_by_name("group_header").clear()
-        dw.find_element_by_name("group_header").send_keys("test1")
+        dw.find_element_by_name("group_header").send_keys(group.header)
         dw.find_element_by_name("group_footer").click()
         dw.find_element_by_name("group_footer").clear()
-        dw.find_element_by_name("group_footer").send_keys("test2")
+        dw.find_element_by_name("group_footer").send_keys(group.footer)
         dw.find_element_by_name("submit").click()
 
     def login(self, dw):
