@@ -1,12 +1,11 @@
 class Account:
 
-    def __init__(self, firstname, middlename, lastname, nickname, mobile, email, phone2, notes):
-        self.firstname = firstname
-        self.middlename = middlename
-        self.lastname = lastname
-        self.nickname = nickname
-        self.mobile = mobile
-        self.email = email
-        self.phone2 = phone2
-        self.notes = notes
+    def __init__(self):
+        self.firstname = "Test"
+        self. middlename = "Testovich"
+        self.lastname = "Testov"
+        self.mobile = "891600000"
+        self.email = "sp@testmail.com"
+        self.username = "admin"
+        self.password = "secret"
 

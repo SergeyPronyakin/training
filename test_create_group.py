@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from group import Group
+from account import Account
 from application import Application
 import pytest
 
@@ -11,9 +12,13 @@ def app(request):
     return fixture
 
 
+user_data = Account()
+group_data = Group()
+
+
 def test_create_group(app):
     app.open_main_page()
-    app.login(username="admin", password="secret")
-    app.create_group(Group(name="test_name", header="header", footer="footer"))
+    app.login(user_data.username, user_data.password)
+    app.create_group(group_data)
     app.return_to_the_group_page()
     app.logout()
