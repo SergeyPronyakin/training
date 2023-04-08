@@ -4,4 +4,3 @@ class Group:
         self.name = "group name"
         self.header = "header text"
         self.footer = "footer text"
-
