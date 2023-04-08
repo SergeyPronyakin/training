@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from group import Group
-from account import Account
-from application import Application
+from model.group import Group
+from model.account import Account
+from fixture.application import Application
 import pytest
 
 
