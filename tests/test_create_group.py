@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from model.group import Group
-from model.account import Account
+from model.group import GroupData
+from model.account import UserData
 from fixture.application import Application
 import pytest
 
@@ -12,13 +12,8 @@ def app(request):
     return fixture
 
 
-user_data = Account()
-group_data = Group()
-
-
 def test_create_group(app):
-    app.open_main_page()
-    app.login(user_data.username, user_data.password)
-    app.create_group(group_data)
-    app.return_to_the_group_page()
-    app.logout()
+    app.session.login(UserData().username, UserData().password)
+    app.group_helper.create_group(GroupData())
+    app.group_helper.return_to_the_group_page()
+    app.session.logout()

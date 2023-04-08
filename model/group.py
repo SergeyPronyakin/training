@@ -1,4 +1,4 @@
-class Group:
+class GroupData:
 
     def __init__(self):
         self.name = "group name"

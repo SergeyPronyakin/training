@@ -1,4 +1,4 @@
-class Account:
+class UserData:
 
     def __init__(self):
         self.firstname = "Test"

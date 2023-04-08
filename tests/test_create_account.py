@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from model.account import Account
+from model.account import UserData
 from fixture.application import Application
 import pytest
-from fixture.session_helper import SessionHelper
 
 
 @pytest.fixture
@@ -12,11 +11,7 @@ def app(request):
     return fixture
 
 
-user_data = Account()
-account_helper = SessionHelper(app)
-
-
 def test_create_account(app):
-    app.session.login(user_data.username, user_data.password)
-    app.session.create_account(user_data)
+    app.session.login(UserData().username, UserData().password)
+    app.account_helper.create_account(UserData())
     app.session.logout()

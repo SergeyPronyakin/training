@@ -1,14 +1,11 @@
-from selenium import webdriver
-
-
 class GroupHelper:
 
-    def return_to_the_group_page(self):
-        wd = self.wd
-        wd.find_element_by_link_text("group page").click()
+    def __init__(self, app):
+        self.app = app
 
     def create_group(self, group):
-        wd = self.wd
+        wd = self.app.wd
+        self.app.open_main_page()
         wd.find_element_by_link_text("groups").click()
         wd.find_element_by_name("new").click()
         wd.find_element_by_name("group_name").click()
@@ -22,3 +19,6 @@ class GroupHelper:
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         wd.find_element_by_name("submit").click()
 
+    def return_to_the_group_page(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("group page").click()
