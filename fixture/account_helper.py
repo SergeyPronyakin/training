@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class AccountHelper:
 
     def __init__(self, app):
@@ -28,7 +31,7 @@ class AccountHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
 
-    def delete_accounts(self):
+    def delete_all_accounts(self):
         wd = self.app.wd
         count_of_accounts = len(wd.find_elements_by_xpath('//img[@alt="Edit"]'))
         while count_of_accounts > 0:
@@ -38,8 +41,13 @@ class AccountHelper:
 
         assert int(wd.find_element_by_id('search_count').text) == 0
 
+    def delete_one_account(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath('//img[@alt="Edit"]').click()
+        wd.find_element_by_xpath('//input[@value="Delete"]').click()
+
     def edit_account(self):
-        name = "Assert name"
+        name = "Assert name" + str(datetime.now())
         wd = self.app.wd
         wd.find_element_by_xpath('//img[@alt="Edit"]').click()
         wd.find_element_by_name("firstname").clear()

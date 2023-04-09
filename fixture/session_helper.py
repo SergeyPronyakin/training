@@ -23,3 +23,5 @@ class SessionHelper:
     def logout(self):
         wd = self.app.wd
         wd.find_element(By.LINK_TEXT, 'Logout').click()
+        WebDriverWait(wd, 20).until(EC.presence_of_element_located((By.XPATH, "//input[@value='Login']")))
+        wd.find_element_by_xpath("//input[@value='Login']").click()
