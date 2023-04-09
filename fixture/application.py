@@ -16,7 +16,7 @@ class Application:
 
     def open_main_page(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
+        wd.get("http://localhost/addressbook/index.php")
         return wd
 
     def is_element_present(self, how, what):

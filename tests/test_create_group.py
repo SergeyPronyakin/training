@@ -1,15 +1,6 @@
 # -*- coding: utf-8 -*-
 from model.group import GroupData
 from model.account import UserData
-from fixture.application import Application
-import pytest
-
-
-@pytest.fixture
-def app(request):
-    fixture = Application()
-    request.addfinalizer(fixture.quit)
-    return fixture
 
 
 def test_create_group(app):

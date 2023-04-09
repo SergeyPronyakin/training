@@ -22,4 +22,8 @@ class AccountHelper:
         wd.find_element_by_name("email").click()
         wd.find_element_by_name("email").clear()
         wd.find_element_by_name("email").send_keys(account.email)
-        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        wd.find_element_by_name("submit").click()
+
+    def return_to_the_home_page(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("home page").click()
