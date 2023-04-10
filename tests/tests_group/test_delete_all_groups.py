@@ -3,7 +3,7 @@ import pytest
 from model.user import UserData
 
 
-@pytest.mark.skip("Test is not ready for homework")
+@pytest.mark.usefixtures("create_group")
 def test_delete_all_group(app):
     app.session.login(UserData().username, UserData().password)
     app.group_helper.delete_all_group()
