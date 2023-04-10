@@ -1,4 +1,4 @@
-class UserData:
+class AccountData:
 
     def __init__(self):
         self.firstname = "Test"
@@ -6,6 +6,3 @@ class UserData:
         self.lastname = "Testov"
         self.mobile = "891600000"
         self.email = "sp@testmail.com"
-        self.username = "admin"
-        self.password = "secret"
-

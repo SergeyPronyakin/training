@@ -1,4 +1,4 @@
-from model.account import UserData
+from model.user import UserData
 
 
 def test_delete_accounts(app):

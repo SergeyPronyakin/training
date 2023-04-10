@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from model.group import GroupData
-from model.account import UserData
+from model.user import UserData
 
 
 def test_create_group(app):

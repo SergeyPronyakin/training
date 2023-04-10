@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
-
-from model.account import UserData
+from model.user import UserData
 
 
 @pytest.mark.skip("Test is not ready")
