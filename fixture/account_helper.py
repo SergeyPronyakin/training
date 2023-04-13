@@ -33,6 +33,7 @@ class AccountHelper:
 
     def delete_all_accounts(self):
         wd = self.app.wd
+        self.app.open_main_page()
         count_of_accounts = len(wd.find_elements_by_xpath('//img[@alt="Edit"]'))
         while count_of_accounts > 0:
             wd.find_element_by_xpath('//img[@alt="Edit"]').click()
@@ -43,12 +44,14 @@ class AccountHelper:
 
     def delete_one_account(self):
         wd = self.app.wd
+        self.app.open_main_page()
         wd.find_element_by_xpath('//img[@alt="Edit"]').click()
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
 
     def edit_account(self):
-        name = "Assert name" + str(datetime.now())
         wd = self.app.wd
+        self.app.open_main_page()
+        name = "Assert name" + str(datetime.now())
         wd.find_element_by_xpath('//img[@alt="Edit"]').click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(name)
