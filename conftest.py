@@ -9,21 +9,23 @@ from model.user import UserData
 @pytest.fixture(scope="session")
 def app(request):
     fixture = Application()
-    request.addfinalizer(fixture.quit)
+    fixture.session.login(UserData())
+
+    def fin():
+        fixture.session.logout()
+        fixture.quit()
+
+    request.addfinalizer(fin)
     return fixture
 
 
 @pytest.fixture
 def create_account(app):
-    app.session.login(UserData())
     app.account_helper.create_account(AccountData())
     app.account_helper.return_to_the_home_page()
-    app.session.logout()
 
 
 @pytest.fixture
 def create_group(app):
-    app.session.login(UserData())
     app.group_helper.create_group(GroupData())
     app.group_helper.return_to_the_group_page()
-    app.session.logout()
