@@ -14,6 +14,16 @@ class Application:
         self.group_helper = GroupHelper(self)
         self.account_helper = AccountHelper(self)
 
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except:
+            return False
+
+
+
+
     def open_main_page(self):
         wd = self.wd
         wd.get("http://localhost/addressbook/index.php")

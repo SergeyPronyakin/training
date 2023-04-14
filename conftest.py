@@ -5,16 +5,28 @@ from model.account import AccountData
 from model.group import GroupData
 from model.user import UserData
 
+fixture = None
 
-@pytest.fixture(scope="session")
-def app(request):
-    fixture = Application()
-    fixture.session.login(UserData())
 
+@pytest.fixture
+def app():
+    global fixture
+    if fixture is None:
+        fixture = Application()
+        fixture.session.login(UserData())
+    else:
+        if not fixture.is_valid():
+            fixture = Application()
+            fixture.session.login(UserData())
+
+    return fixture
+
+
+@pytest.fixture(scope="session", autouse=True)
+def stop(request):
     def fin():
         fixture.session.logout()
         fixture.quit()
-
     request.addfinalizer(fin)
     return fixture
 
