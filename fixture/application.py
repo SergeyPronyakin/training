@@ -21,9 +21,6 @@ class Application:
         except:
             return False
 
-
-
-
     def open_main_page(self):
         wd = self.wd
         wd.get("http://localhost/addressbook/index.php")
