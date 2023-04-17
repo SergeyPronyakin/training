@@ -5,12 +5,14 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class AccountHelper:
 
+    HOME_PAGE = "http://localhost/addressbook/index.php"
+
     def __init__(self, app):
         self.app = app
 
     def create_account(self, account):
         wd = self.app.wd
-        self.app.open_main_page()
+        self.open_home_page_with_check()
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -29,18 +31,38 @@ class AccountHelper:
         wd.find_element_by_name("email").send_keys(account.email)
         wd.find_element_by_name("submit").click()
 
+    def open_home_page_with_check(self, check_url=None, check_xpath_element=None):
+        """Input URL to check current URL and XPATH selector for checking it at the page"""
+        wd = self.app.wd
+
+        if not check_url:
+            check_url = self.HOME_PAGE
+
+        # If xpath is not input
+        if not check_xpath_element:
+            # Do not change page if current page text is desired
+            if wd.current_url == check_url:
+                return
+        # If xpath is input
+        else:
+            # Do not change page if current page text is desired and there is desired xpath selector at this page
+            if check_url in wd.current_url and wd.find_elements_by_xpath(check_xpath_element):
+                return
+
+        wd.get(self.HOME_PAGE)
+
     def return_to_the_home_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
 
     def count_of_accounts(self):
         wd = self.app.wd
-        self.app.open_main_page()
+        self.open_home_page_with_check()
         return len(wd.find_elements_by_xpath("//table/tbody/tr[2]"))
 
     def delete_all_accounts(self):
         wd = self.app.wd
-        self.app.open_main_page()
+        self.open_home_page_with_check()
         count_of_accounts = len(wd.find_elements_by_xpath('//img[@alt="Edit"]'))
         while count_of_accounts > 0:
             WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="Edit"]')))
@@ -53,14 +75,13 @@ class AccountHelper:
 
     def delete_one_account(self):
         wd = self.app.wd
-        self.app.open_main_page()
+        self.open_home_page_with_check()
         wd.find_element_by_xpath('//img[@alt="Edit"]').click()
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
 
     def edit_account(self, account):
-
         wd = self.app.wd
-        self.app.open_main_page()
+        self.open_home_page_with_check()
         wd.find_element_by_xpath('//img[@alt="Edit"]').click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(account.firstname)

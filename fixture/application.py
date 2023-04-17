@@ -1,8 +1,8 @@
+from fixture.account_helper import AccountHelper
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException, NoSuchElementException
 from fixture.session_helper import SessionHelper
 from fixture.group_helper import GroupHelper
-from fixture.account_helper import AccountHelper
 
 
 class Application:
