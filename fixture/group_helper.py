@@ -3,8 +3,21 @@ from datetime import datetime
 
 class GroupHelper:
 
+    GROUP_PAGE = "http://localhost/addressbook/group.php"
+
     def __init__(self, app):
         self.app = app
+
+    def open_group_page(self):
+        wd = self.app.wd
+        self.app.open_main_page()
+        wd.find_element_by_link_text("groups").click()
+
+    def count_of_groups(self):
+        wd = self.app.wd
+        self.app.open_main_page()
+        wd.find_element_by_link_text("groups").click()
+        return len(wd.find_elements_by_xpath("//div[4]/form/span"))
 
     def create_group(self, group):
         wd = self.app.wd

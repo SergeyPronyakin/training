@@ -7,9 +7,10 @@ from fixture.account_helper import AccountHelper
 
 class Application:
 
+    HOME_PAGE = "http://localhost/addressbook/index.php"
+
     def __init__(self):
         self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(30)
         self.session = SessionHelper(self)
         self.group_helper = GroupHelper(self)
         self.account_helper = AccountHelper(self)
@@ -25,6 +26,10 @@ class Application:
         wd = self.wd
         wd.get("http://localhost/addressbook/index.php")
         return wd
+
+    def current_url(self):
+        wd = self.wd
+        return wd.current_url
 
     def is_element_present(self, how, what):
         try:
@@ -42,4 +47,3 @@ class Application:
 
     def quit(self):
         self.wd.quit()
-

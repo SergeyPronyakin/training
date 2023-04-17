@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import pytest
+from model.group import GroupData
 
 
-@pytest.mark.usefixtures("create_group")
 def test_delete_all_group(app):
+    if not app.group_helper.count_of_groups():
+        app.group_helper.create_group(GroupData())
     app.group_helper.delete_all_group()
-    app.group_helper.return_to_the_group_page()
-

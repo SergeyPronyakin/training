@@ -33,15 +33,22 @@ class AccountHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
 
+    def count_of_accounts(self):
+        wd = self.app.wd
+        self.app.open_main_page()
+        return len(wd.find_elements_by_xpath("//table/tbody/tr[2]"))
+
     def delete_all_accounts(self):
         wd = self.app.wd
         self.app.open_main_page()
         count_of_accounts = len(wd.find_elements_by_xpath('//img[@alt="Edit"]'))
         while count_of_accounts > 0:
+            WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="Edit"]')))
             wd.find_element_by_xpath('//img[@alt="Edit"]').click()
             wd.find_element_by_xpath('//input[@value="Delete"]').click()
             count_of_accounts -= 1
 
+        WebDriverWait(wd, 5).until(EC.presence_of_element_located((By.ID, 'search_count')))
         assert int(wd.find_element_by_id('search_count').text) == 0
 
     def delete_one_account(self):
@@ -64,10 +71,9 @@ class AccountHelper:
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
 
-        # Updated text waiting...
-        xpath = f"//*[contains(text(), '{account.firstname}')]"
-        WebDriverWait(wd, 20).until(EC.presence_of_element_located((By.XPATH, xpath)))
+        # New account text waiting for...
+        WebDriverWait(wd, 5).until(EC.presence_of_element_located((By.XPATH, f"//*[contains(text(), '{account.firstname}')]")))
 
         # Assert first name at home page after updating
-        assert wd.find_element_by_xpath("/html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[3]").text == account.firstname
-        assert wd.find_element_by_xpath("/html/body/div/div[4]/form[2]/table/tbody/tr[2]/td[5]").text == account.email
+        assert wd.find_element_by_xpath("//form[2]/table/tbody/tr[2]/td[3]").text == account.firstname
+        assert wd.find_element_by_xpath("//form[2]/table/tbody/tr[2]/td[5]").text == account.email
