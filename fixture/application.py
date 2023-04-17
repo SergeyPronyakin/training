@@ -1,6 +1,8 @@
 from fixture.account_helper import AccountHelper
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException, NoSuchElementException
+
+from fixture.openers.page_opener import PageOpener
 from fixture.session_helper import SessionHelper
 from fixture.group_helper import GroupHelper
 
@@ -14,6 +16,7 @@ class Application:
         self.session = SessionHelper(self)
         self.group_helper = GroupHelper(self)
         self.account_helper = AccountHelper(self)
+        self.page_opener = PageOpener(self)
 
     def is_valid(self):
         try:

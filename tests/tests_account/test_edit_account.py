@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from model.account import AccountData
-from fixture.application import Application
 
 
 def test_edit_accounts(app):
