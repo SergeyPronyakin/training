@@ -41,7 +41,7 @@ class AccountHelper:
     def count_of_accounts(self):
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
-        return len(wd.find_elements_by_xpath("//table/tbody/tr[2]"))
+        return len(wd.find_elements_by_name("entry"))
 
     def delete_all_accounts(self):
         wd = self.app.wd
