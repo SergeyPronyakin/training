@@ -3,12 +3,12 @@ from datetime import datetime
 
 class AccountData:
 
-    def __init__(self):
-        self.firstname = "Test"
-        self. middlename = "Testovich"
-        self.lastname = "Testov"
-        self.mobile = "891600000"
-        self.email = "sp@testmail.com"
+    def __init__(self, firstname=None, middlename=None, lastname=None, mobile=None, email=None):
+        self.firstname = firstname
+        self. middlename = middlename
+        self.lastname = lastname
+        self.mobile = mobile
+        self.email = email
 
     def test_data(self):
         test_data = "Test" + str(datetime.now())
