@@ -87,5 +87,4 @@ class GroupHelper:
         return group_values
 
     def groups(self):
-        return [GroupData(name=x, id=y) for x, y in zip(self.get_group_names(), self.get_group_values())]
-
+        return [GroupData(name=name, id=value) for name, value in zip(self.get_group_names(), self.get_group_values())]
