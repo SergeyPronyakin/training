@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 from fixture.openers.page_opener import PageOpener
+from model.account import AccountData
 
 
 class AccountHelper:
@@ -81,3 +82,35 @@ class AccountHelper:
         # Assert first name at home page after updating
         assert wd.find_element_by_xpath("//form[2]/table/tbody/tr[2]/td[3]").text == account.firstname
         assert wd.find_element_by_xpath("//form[2]/table/tbody/tr[2]/td[5]").text == account.email
+
+    def get_account_objects(self) -> list:
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        return wd.find_elements_by_name("entry")
+
+    def get_account_ids(self) -> list:
+        account_values = []
+        for el in self.get_account_objects():
+            account_id = el.find_element_by_name("selected[]").get_attribute("id")
+            account_values.append(account_id)
+        return account_values
+
+    def get_account_attributes_text(self, xpath) -> list:
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        account_attributes = wd.find_elements_by_xpath(xpath)
+        account_attributes_text = []
+        for el in account_attributes:
+            account_attributes_text.append(el.text)
+        return account_attributes_text
+
+    def accounts(self):
+        return [AccountData(firstname=firstname, lastname=lastname,
+                            mobile=mobile, email=email, id=value)
+                for firstname, lastname, mobile, email, value
+                in zip(self.get_account_attributes_text("//td[3]"),
+                       self.get_account_attributes_text("//td[2]"),
+                       self.get_account_attributes_text("//td[6]"),
+                       self.get_account_attributes_text("//td[5]"),
+                       self.get_account_ids())]
+
