@@ -3,7 +3,7 @@ from model.group import GroupData
 
 
 def test_create_group(app):
-    group = GroupData(name="Groupname", header="Header", footer="Footer")
+    group = GroupData()
     old_group_list = app.group_helper.groups()
     app.group_helper.create_group(group)
     new_group_list = app.group_helper.groups()

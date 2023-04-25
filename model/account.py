@@ -3,7 +3,8 @@ from datetime import datetime
 
 class AccountData:
 
-    def __init__(self, firstname=None, middlename=None, lastname=None, mobile=None, email=None):
+    def __init__(self, firstname="Firstname", middlename="Middlename",
+                 lastname="Lastname", mobile="89160000101", email="test@gmail.com"):
         self.firstname = firstname
         self. middlename = middlename
         self.lastname = lastname

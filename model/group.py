@@ -3,7 +3,7 @@ from sys import maxsize
 
 class GroupData:
 
-    def __init__(self, name=None, header=None, footer=None, id=None):
+    def __init__(self, name="Test_name", header="Test_header", footer="Test_footer", id=None):
         self.name = name
         self.header = header
         self.footer = footer
