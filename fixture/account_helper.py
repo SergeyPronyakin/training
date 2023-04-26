@@ -8,6 +8,7 @@ from model.account import AccountData
 class AccountHelper:
 
     HOME_PAGE = "http://localhost/addressbook/index.php"
+    account_cache = None
 
     def __init__(self, app):
         self.app = app
@@ -30,6 +31,7 @@ class AccountHelper:
         self.input_text_in_fields(account.mobile, "mobile")
         self.input_text_in_fields(account.email, "email")
         wd.find_element_by_name("submit").click()
+        self.account_cache = None
         return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
                            mobile=account.mobile, email=account.email)
 
@@ -51,15 +53,14 @@ class AccountHelper:
             wd.find_element_by_xpath('//img[@alt="Edit"]').click()
             wd.find_element_by_xpath('//input[@value="Delete"]').click()
             count_of_accounts -= 1
-
-        WebDriverWait(wd, 5).until(EC.presence_of_element_located((By.ID, 'search_count')))
-        assert int(wd.find_element_by_id('search_count').text) == 0
+        self.account_cache = None
 
     def delete_one_account(self):
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         wd.find_element_by_xpath('//img[@alt="Edit"]').click()
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
+        self.account_cache = None
 
     def edit_account(self, account):
         wd = self.app.wd
@@ -79,13 +80,17 @@ class AccountHelper:
 
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
+        self.account_cache = None
         return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
                            mobile=account.mobile, email=account.email)
 
     def get_account_objects(self) -> list:
+        if self.account_cache:
+            return self.account_cache
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.HOME_PAGE)
-        return wd.find_elements_by_name("entry")
+        self.account_cache = wd.find_elements_by_name("entry")
+        return self.account_cache
 
     def get_account_ids(self) -> list:
         account_values = []

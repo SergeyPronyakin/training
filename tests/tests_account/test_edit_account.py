@@ -18,5 +18,3 @@ def test_edit_accounts(app):
     old_accounts[0] = account_data
 
     assert sorted(old_accounts, key=AccountData.id_or_max) == sorted(new_accounts, key=AccountData.id_or_max)
-
-

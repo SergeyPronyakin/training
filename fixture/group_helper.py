@@ -7,6 +7,7 @@ from model.group import GroupData
 
 class GroupHelper:
     GROUP_PAGE = "http://localhost/addressbook/group.php"
+    group_cache = None
 
     def __init__(self, app):
         self.app = app
@@ -37,6 +38,7 @@ class GroupHelper:
         self.input_text_in_fields(group.footer, "group_footer")
         wd.find_element_by_name("submit").click()
         self.return_to_the_group_page()
+        self.group_cache = None
         return GroupData(name=group.name, header=group.header, footer=group.footer)
 
     def return_to_the_group_page(self):
@@ -53,6 +55,7 @@ class GroupHelper:
         wd.find_element_by_name("group_name").clear()
         wd.find_element_by_name("group_name").send_keys(assert_name)
         wd.find_element_by_name("update").click()
+        self.group_cache = None
 
     def delete_group(self):
         wd = self.app.wd
@@ -61,6 +64,7 @@ class GroupHelper:
         if group_list:
             group_list[0].click()
             wd.find_element_by_name("delete").click()
+        self.group_cache = None
 
     def delete_all_group(self):
         wd = self.app.wd
@@ -69,11 +73,15 @@ class GroupHelper:
         for group in all_groups_checkboxes:
             group.click()
         wd.find_element_by_name("delete").click()
+        self.group_cache = None
 
     def get_group_objects(self) -> list:
+        if self.group_cache:
+            return list(self.group_cache)
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//form/input[6]")
-        return wd.find_elements_by_css_selector("span.group")
+        self.group_cache = wd.find_elements_by_css_selector("span.group")
+        return self.group_cache
 
     def get_group_names(self) -> list:
         group_names = []
