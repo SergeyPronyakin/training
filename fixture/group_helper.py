@@ -12,6 +12,13 @@ class GroupHelper:
         self.app = app
         self.page_opener = PageOpener(app)
 
+    def input_text_in_fields(self, text, selector_name):
+        wd = self.app.wd
+        field = wd.find_element_by_name(selector_name)
+        field.click()
+        field.clear()
+        field.send_keys(text)
+
     def get_group_page(self):
         wd = self.app.wd
         return wd.get(self.GROUP_PAGE)
@@ -25,15 +32,9 @@ class GroupHelper:
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//input[@name='new']")
         wd.find_element_by_name("new").click()
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.header)
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.footer)
+        self.input_text_in_fields(group.name, "group_name")
+        self.input_text_in_fields(group.header, "group_header")
+        self.input_text_in_fields(group.footer, "group_footer")
         wd.find_element_by_name("submit").click()
         self.return_to_the_group_page()
         return GroupData(name=group.name, header=group.header, footer=group.footer)

@@ -13,8 +13,8 @@ class AccountData:
         self.email = email
         self.id = id
 
-    def test_data(self):
-        test_data = "Test" + str(datetime.now())
+    def test_data(self, assert_text: str):
+        test_data = assert_text + str(datetime.now())
 
         if self.firstname:
             self.firstname = test_data

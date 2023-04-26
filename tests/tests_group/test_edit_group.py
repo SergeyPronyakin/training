@@ -15,5 +15,3 @@ def test_edit_group(app):
 
     assert new_group_list[0].name == assert_name
     assert len(old_group_list) == len(new_group_list)
-
-
