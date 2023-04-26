@@ -46,23 +46,37 @@ class GroupHelper:
         WebDriverWait(wd, 5).until(EC.presence_of_element_located((By.LINK_TEXT, 'group page')))
         wd.find_element_by_link_text("group page").click()
 
-    def edit_group(self, assert_name):
+    def edit_first_group(self, assert_name, index):
+        self.edit_group_by_index(assert_name, index)
+        self.group_cache = None
+
+    def edit_group_by_index(self, group, index):
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
-        wd.find_element_by_name("selected[]").click()
+        groups = wd.find_elements_by_name("selected[]")
+        groups[index].click()
         wd.find_element_by_name("edit").click()
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(assert_name)
+        wd.find_element_by_name("group_name").send_keys(group.name)
         wd.find_element_by_name("update").click()
         self.group_cache = None
 
-    def delete_group(self):
+    def delete_first_group(self):
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
         group_list = wd.find_elements_by_name("selected[]")
         if group_list:
             group_list[0].click()
+            wd.find_element_by_name("delete").click()
+        self.group_cache = None
+
+    def delete_group_by_index(self, index):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
+        group_list = wd.find_elements_by_name("selected[]")
+        if group_list:
+            group_list[index].click()
             wd.find_element_by_name("delete").click()
         self.group_cache = None
 

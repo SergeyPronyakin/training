@@ -8,4 +8,3 @@ def test_delete_all_group(app):
     app.group_helper.delete_all_group()
 
     assert app.group_helper.count_of_groups() == 0
-
