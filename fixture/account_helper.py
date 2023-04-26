@@ -1,7 +1,6 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
 from fixture.openers.page_opener import PageOpener
 from model.account import AccountData
 
@@ -14,26 +13,25 @@ class AccountHelper:
         self.app = app
         self.page_opener = PageOpener(app)
 
+    def input_text_in_fields(self, text, selector_name):
+        wd = self.app.wd
+        field = wd.find_element_by_name(selector_name)
+        field.click()
+        field.clear()
+        field.send_keys(text)
+
     def create_account(self, account):
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         wd.find_element_by_link_text("add new").click()
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(account.firstname)
-        wd.find_element_by_name("middlename").click()
-        wd.find_element_by_name("middlename").clear()
-        wd.find_element_by_name("middlename").send_keys(account.middlename)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(account.lastname)
-        wd.find_element_by_name("mobile").click()
-        wd.find_element_by_name("mobile").clear()
-        wd.find_element_by_name("mobile").send_keys(account.mobile)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(account.email)
+        self.input_text_in_fields(account.firstname, "firstname")
+        self.input_text_in_fields(account.middlename, "middlename")
+        self.input_text_in_fields(account.lastname, "lastname")
+        self.input_text_in_fields(account.mobile, "mobile")
+        self.input_text_in_fields(account.email, "email")
         wd.find_element_by_name("submit").click()
+        return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
+                           mobile=account.mobile, email=account.email)
 
     def return_to_the_home_page(self):
         wd = self.app.wd
@@ -76,13 +74,6 @@ class AccountHelper:
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
 
-        # New account text waiting for...
-        WebDriverWait(wd, 5).until(EC.presence_of_element_located((By.XPATH, f"//*[contains(text(), '{account.firstname}')]")))
-
-        # Assert first name at home page after updating
-        assert wd.find_element_by_xpath("//form[2]/table/tbody/tr[2]/td[3]").text == account.firstname
-        assert wd.find_element_by_xpath("//form[2]/table/tbody/tr[2]/td[5]").text == account.email
-
     def get_account_objects(self) -> list:
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.HOME_PAGE)
@@ -113,4 +104,3 @@ class AccountHelper:
                        self.get_account_attributes_text("//td[6]"),
                        self.get_account_attributes_text("//td[5]"),
                        self.get_account_ids())]
-
