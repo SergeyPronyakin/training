@@ -20,7 +20,7 @@ class AccountHelper:
         field.clear()
         field.send_keys(text)
 
-    def create_account(self, account):
+    def create_account(self, account) -> AccountData:
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         wd.find_element_by_link_text("add new").click()
@@ -104,3 +104,10 @@ class AccountHelper:
                        self.get_account_attributes_text("//td[6]"),
                        self.get_account_attributes_text("//td[5]"),
                        self.get_account_ids())]
+
+    def get_accounts_count_from_page(self):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        num = WebDriverWait(wd, 5).until(
+            EC.presence_of_element_located((By.ID, "search_count")))
+        return num.text
