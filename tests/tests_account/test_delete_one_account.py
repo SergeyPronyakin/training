@@ -12,7 +12,6 @@ def test_delete_one_account(app):
     app.account_helper.delete_one_account()
     
     count_of_accounts_after_deleting = int(app.account_helper.get_accounts_count_from_page())
-    new_accounts = app.account_helper.accounts()
 
-    assert len(old_accounts) == len(new_accounts) + 1
+    assert len(old_accounts) == app.account_helper.count_of_accounts() + 1
     assert count_of_accounts_before_deleting == count_of_accounts_after_deleting + 1

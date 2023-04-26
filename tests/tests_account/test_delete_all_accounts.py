@@ -12,9 +12,8 @@ def test_delete_all_accounts(app):
     app.account_helper.delete_all_accounts()
 
     count_of_accounts_after_deleting = int(app.account_helper.get_accounts_count_from_page())
-    new_accounts = app.account_helper.accounts()
 
+    assert app.account_helper.count_of_accounts() == 0
     assert len(old_accounts) > 0
-    assert len(new_accounts) == 0
     assert count_of_accounts_before_deleting >= count_of_accounts_after_deleting
     assert count_of_accounts_after_deleting == 0

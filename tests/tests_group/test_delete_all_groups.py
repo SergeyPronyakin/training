@@ -7,6 +7,5 @@ def test_delete_all_group(app):
         app.group_helper.create_group(GroupData())
     app.group_helper.delete_all_group()
 
-    group_list = app.group_helper.groups()
-    assert len(group_list) == 0
+    assert app.group_helper.count_of_groups() == 0
 

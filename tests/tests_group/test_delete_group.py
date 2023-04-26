@@ -9,5 +9,4 @@ def test_delete_group(app):
 
     app.group_helper.delete_group()
 
-    new_group_list = app.group_helper.groups()
-    assert len(new_group_list) == len(old_group_list) - 1
+    assert app.group_helper.count_of_groups() == len(old_group_list) - 1
