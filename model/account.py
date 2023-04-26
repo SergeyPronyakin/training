@@ -1,4 +1,5 @@
 from datetime import datetime
+from sys import maxsize
 
 
 class AccountData:
@@ -27,3 +28,19 @@ class AccountData:
             self.email = test_data
 
         return self
+
+    def __repr__(self):
+        return "%s:%s:%s:%s:%s:%s" % (self.id, self.firstname, self.middlename, self.lastname, self.mobile, self.email)
+
+    def __eq__(self, other):
+        return (self.id is None or self.firstname is None or self.middlename is None or
+                self.lastname is None or other.id is None or
+                self.mobile is None or self.email is None or self.id == other.id) and self.firstname == other.firstname\
+            and self.middlename == other.middlename and self.lastname == other.lastname and self.mobile == other.mobile\
+            and self.email == other.email
+
+    def id_or_max(self):
+        if self.id:
+            return int(self.id)
+        else:
+            return int(maxsize)
