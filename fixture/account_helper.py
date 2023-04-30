@@ -6,7 +6,6 @@ from model.account import AccountData
 
 
 class AccountHelper:
-
     HOME_PAGE = "http://localhost/addressbook/index.php"
     account_cache = None
 
@@ -14,26 +13,39 @@ class AccountHelper:
         self.app = app
         self.page_opener = PageOpener(app)
 
-    def input_text_in_fields(self, text, selector_name):
+    def input_text_in_field(self, text, selector_name):
         wd = self.app.wd
         field = wd.find_element_by_name(selector_name)
         field.click()
         field.clear()
         field.send_keys(text)
 
+    def get_text_from_field(self, selector_name):
+        wd = self.app.wd
+        field = wd.find_element_by_name(selector_name)
+        return field.text
+
     def create_account(self, account) -> AccountData:
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         wd.find_element_by_link_text("add new").click()
-        self.input_text_in_fields(account.firstname, "firstname")
-        self.input_text_in_fields(account.middlename, "middlename")
-        self.input_text_in_fields(account.lastname, "lastname")
-        self.input_text_in_fields(account.mobile, "mobile")
-        self.input_text_in_fields(account.email, "email")
+        self.input_text_in_field(account.firstname, "firstname")
+        self.input_text_in_field(account.middlename, "middlename")
+        self.input_text_in_field(account.lastname, "lastname")
+        self.input_text_in_field(account.nickname, "nickname")
+        self.input_text_in_field(account.address, "address")
+        self.input_text_in_field(account.home_phone, "home")
+        self.input_text_in_field(account.mobile, "mobile")
+        self.input_text_in_field(account.work_phone, "work")
+        self.input_text_in_field(account.email, "email")
+        self.input_text_in_field(account.email2, "email2")
+        self.input_text_in_field(account.email3, "email3")
         wd.find_element_by_name("submit").click()
         self.account_cache = None
         return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
-                           mobile=account.mobile, email=account.email)
+                           nickname=account.nickname, address=account.address, home_phone=account.home_phone,
+                           mobile=account.mobile, work_phone=account.work_phone,
+                           email=account.email, email2=account.email2, email3=account.email3)
 
     def return_to_the_home_page(self):
         wd = self.app.wd
@@ -66,6 +78,30 @@ class AccountHelper:
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
         self.account_cache = None
 
+    def get_edit_account_page_by_index_from_home_page(self, index):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        edit_accounts_icons = wd.find_elements_by_xpath('//img[@alt="Edit"]')
+        edit_accounts_icons[index].click()
+
+    def get_account_data_from_edit_page_by_index(self, account, index):
+        self.get_edit_account_page_by_index_from_home_page(index)
+        firstname = self.get_text_from_field("firstname")
+        lastname = self.get_text_from_field("lastname")
+        middlename = self.get_text_from_field("middlename")
+        nickname = self.get_text_from_field("nickname")
+        mobile = self.get_text_from_field("mobile")
+        home_phone = self.get_text_from_field("home")
+        work_phone = self.get_text_from_field("work")
+        email = self.get_text_from_field("email")
+        email2 = self.get_text_from_field("email2")
+        email3 = self.get_text_from_field("email3")
+        address = self.get_text_from_field("address")
+        return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
+                           nickname=account.nickname, address=account.address, home_phone=account.home_phone,
+                           mobile=account.mobile, work_phone=account.work_phone,
+                           email=account.email, email2=account.email2, email3=account.email3)
+
     def edit_some_account_by_index(self, account, index):
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
@@ -73,15 +109,15 @@ class AccountHelper:
         edit_accounts_icons[index].click()
 
         if account.firstname:
-            self.input_text_in_fields(account.firstname, "firstname")
+            self.input_text_in_field(account.firstname, "firstname")
         if account.middlename:
-            self.input_text_in_fields(account.middlename, "middlename")
+            self.input_text_in_field(account.middlename, "middlename")
         if account.lastname:
-            self.input_text_in_fields(account.lastname, "lastname")
+            self.input_text_in_field(account.lastname, "lastname")
         if account.mobile:
-            self.input_text_in_fields(account.mobile, "mobile")
+            self.input_text_in_field(account.mobile, "mobile")
         if account.email:
-            self.input_text_in_fields(account.email, "email")
+            self.input_text_in_field(account.email, "email")
 
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
@@ -91,26 +127,6 @@ class AccountHelper:
 
     def edit_account(self, account):
         self.edit_some_account_by_index(account, 0)
-        # wd = self.app.wd
-        # self.page_opener.open_page_with_check(self.HOME_PAGE)
-        # wd.find_element_by_xpath('//img[@alt="Edit"]').click()
-        #
-        # if account.firstname:
-        #     self.input_text_in_fields(account.firstname, "firstname")
-        # if account.middlename:
-        #     self.input_text_in_fields(account.middlename, "middlename")
-        # if account.lastname:
-        #     self.input_text_in_fields(account.lastname, "lastname")
-        # if account.mobile:
-        #     self.input_text_in_fields(account.mobile, "mobile")
-        # if account.email:
-        #     self.input_text_in_fields(account.email, "email")
-        #
-        # wd.find_element_by_name("update").click()
-        # self.return_to_the_home_page()
-        # self.account_cache = None
-        # return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
-        #                    mobile=account.mobile, email=account.email)
 
     def get_account_objects(self) -> list:
         if self.account_cache:
@@ -136,7 +152,7 @@ class AccountHelper:
             account_attributes_text.append(el.text)
         return account_attributes_text
 
-    def accounts(self):
+    def accounts(self) -> list:
         return [AccountData(firstname=firstname, lastname=lastname,
                             mobile=mobile, email=email, id=value)
                 for firstname, lastname, mobile, email, value
@@ -146,7 +162,7 @@ class AccountHelper:
                        self.get_account_attributes_text("//td[5]"),
                        self.get_account_ids())]
 
-    def get_accounts_count_from_page(self):
+    def get_accounts_count_from_page(self) -> str:
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.HOME_PAGE)
         num = WebDriverWait(wd, 5).until(
