@@ -144,7 +144,7 @@ class AccountHelper:
             account_values.append(account_id)
         return account_values
 
-    def get_account_attributes_text(self, xpath) -> list:
+    def get_account_attributes_text(self, xpath):
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.HOME_PAGE)
         account_attributes = wd.find_elements_by_xpath(xpath)
@@ -158,13 +158,16 @@ class AccountHelper:
         firstname = self.get_account_attributes_text("//td[3]")
         address = self.get_account_attributes_text("//td[4]")
         emails = self.get_account_attributes_text("//td[5]")
-        phones = self.get_account_attributes_text("//td[6]")
+        phones = self.get_account_attributes_text("//td[6]")[0].splitlines()
+        home_phone = phones[0]
+        mobile = phones[1]
+        work_phone = phones[2]
         ids = self.get_account_ids()
 
         return [AccountData(firstname=firstname, lastname=lastname, address=address,
-                            email=emails, mobile=phones, id=ids)
-                for firstname, lastname, address, emails, phones, ids
-                in zip(firstname, lastname, address, emails, phones, ids)]
+                            email=emails, home_phone=home_phone, mobile=mobile, work_phone=work_phone, id=ids)
+                for firstname, lastname, address, emails, ids
+                in zip(firstname, lastname, address, emails, ids)]
 
     def get_accounts_count_from_page(self) -> str:
         wd = self.app.wd
