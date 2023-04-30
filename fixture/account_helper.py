@@ -23,7 +23,7 @@ class AccountHelper:
     def get_text_from_field(self, selector_name):
         wd = self.app.wd
         field = wd.find_element_by_name(selector_name)
-        return field.text
+        return field.get_attribute("value")
 
     def create_account(self, account) -> AccountData:
         wd = self.app.wd
@@ -84,7 +84,7 @@ class AccountHelper:
         edit_accounts_icons = wd.find_elements_by_xpath('//img[@alt="Edit"]')
         edit_accounts_icons[index].click()
 
-    def get_account_data_from_edit_page_by_index(self, account, index):
+    def get_account_data_from_edit_page_by_index(self, index):
         self.get_edit_account_page_by_index_from_home_page(index)
         firstname = self.get_text_from_field("firstname")
         lastname = self.get_text_from_field("lastname")
@@ -97,10 +97,11 @@ class AccountHelper:
         email2 = self.get_text_from_field("email2")
         email3 = self.get_text_from_field("email3")
         address = self.get_text_from_field("address")
-        return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
-                           nickname=account.nickname, address=account.address, home_phone=account.home_phone,
-                           mobile=account.mobile, work_phone=account.work_phone,
-                           email=account.email, email2=account.email2, email3=account.email3)
+        id = self.get_text_from_field("id")
+        return AccountData(firstname=firstname, middlename=middlename, lastname=lastname,
+                           nickname=nickname, address=address, home_phone=home_phone,
+                           mobile=mobile, work_phone=work_phone,
+                           email=email, email2=email2, email3=email3, id=id)
 
     def edit_some_account_by_index(self, account, index):
         wd = self.app.wd
@@ -153,14 +154,17 @@ class AccountHelper:
         return account_attributes_text
 
     def accounts(self) -> list:
-        return [AccountData(firstname=firstname, lastname=lastname,
-                            mobile=mobile, email=email, id=value)
-                for firstname, lastname, mobile, email, value
-                in zip(self.get_account_attributes_text("//td[3]"),
-                       self.get_account_attributes_text("//td[2]"),
-                       self.get_account_attributes_text("//td[6]"),
-                       self.get_account_attributes_text("//td[5]"),
-                       self.get_account_ids())]
+        lastname = self.get_account_attributes_text("//td[2]")
+        firstname = self.get_account_attributes_text("//td[3]")
+        address = self.get_account_attributes_text("//td[4]")
+        emails = self.get_account_attributes_text("//td[5]")
+        phones = self.get_account_attributes_text("//td[6]")
+        ids = self.get_account_ids()
+
+        return [AccountData(firstname=firstname, lastname=lastname, address=address,
+                            email=emails, mobile=phones, id=ids)
+                for firstname, lastname, address, emails, phones, ids
+                in zip(firstname, lastname, address, emails, phones, ids)]
 
     def get_accounts_count_from_page(self) -> str:
         wd = self.app.wd
