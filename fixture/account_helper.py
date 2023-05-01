@@ -159,17 +159,12 @@ class AccountHelper:
         firstname = self.get_account_attributes_text("//td[3]")
         address = self.get_account_attributes_text("//td[4]")
         all_emails_from_home_page = self.get_account_attributes_text("//td[5]")
-        splitlines_emails = self.get_account_attributes_text("//td[5]")[0].splitlines()
         all_phones_from_home_page = self.get_account_attributes_text("//td[6]")
-        splitlines_phones = self.get_account_attributes_text("//td[6]")[0].splitlines()
         ids = self.get_account_ids()
 
         return [AccountData(firstname=firstname, lastname=lastname, address=address,
                             all_emails_from_home_page=all_emails_from_home_page,
-                            email=splitlines_emails[0], email2=splitlines_emails[1], email3=splitlines_emails[2],
-                            all_phones_from_home_page=all_phones_from_home_page,
-                            home_phone=splitlines_phones[0], mobile=splitlines_phones[1], work_phone=splitlines_phones[2],
-                            id=ids)
+                            all_phones_from_home_page=all_phones_from_home_page, id=ids)
                 for firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids
                 in zip(firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids)]
 
