@@ -70,6 +70,7 @@ class AccountHelper:
 
     def delete_first_account(self):
         self.delete_account_by_index(0)
+        self.account_cache = None
 
     def delete_account_by_index(self, index):
         wd = self.app.wd
@@ -127,7 +128,7 @@ class AccountHelper:
         return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
                            mobile=account.mobile, email=account.email)
 
-    def edit_account(self, account):
+    def edit_first_account(self, account):
         self.edit_some_account_by_index(account, 0)
 
     def get_account_objects(self) -> list:
@@ -139,11 +140,13 @@ class AccountHelper:
         return self.account_cache
 
     def get_account_ids(self) -> list:
-        account_values = []
-        for el in self.get_account_objects():
-            account_id = el.find_element_by_name("selected[]").get_attribute("id")
-            account_values.append(account_id)
-        return account_values
+        account_ids = []
+        wd = self.app.wd
+        accounts = wd.find_elements_by_name("entry")
+        for account in accounts:
+            account_id = account.find_element_by_name("selected[]").get_attribute("id")
+            account_ids.append(account_id)
+        return account_ids
 
     def get_account_attributes_text(self, xpath):
         wd = self.app.wd
@@ -154,7 +157,7 @@ class AccountHelper:
             account_attributes_text.append(el.text)
         return account_attributes_text
 
-    def accounts(self) -> list:
+    def get_accounts(self) -> list:
         lastname = self.get_account_attributes_text("//td[2]")
         firstname = self.get_account_attributes_text("//td[3]")
         address = self.get_account_attributes_text("//td[4]")
@@ -168,7 +171,7 @@ class AccountHelper:
                 for firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids
                 in zip(firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids)]
 
-    def get_accounts_count_from_page(self) -> str:
+    def get_count_of_accounts_from_home_page(self) -> str:
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.HOME_PAGE)
         num = WebDriverWait(wd, 5).until(

@@ -2,14 +2,14 @@ import random
 from model.account import AccountData
 
 
-def test_check_some_account_data(app):
+def test_assert_random_account_data_from_home_page_and_edit_page(app):
     if not app.account_helper.count_of_accounts():
         app.account_helper.create_account(AccountData())
 
-    count_of_accounts = int(app.account_helper.get_accounts_count_from_page())
+    count_of_accounts = int(app.account_helper.get_count_of_accounts_from_home_page())
     random_account = random.randrange(count_of_accounts)
 
-    account_at_home_page = app.account_helper.accounts()[random_account]
+    account_at_home_page = app.account_helper.get_accounts()[random_account]
     account_at_edit_page = app.account_helper.get_account_data_from_edit_page_by_index(random_account)
 
     all_phones_from_home_page = account_at_home_page.all_phones_from_home_page
@@ -30,4 +30,3 @@ def test_check_some_account_data(app):
 
     # Check address
     assert account_at_edit_page.address == account_at_home_page.address
-
