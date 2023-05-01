@@ -21,8 +21,6 @@ def test_check_some_account_data(app):
     all_emails_from_edit_page = None
 
     # Check phones
-    print("\n" + str(all_phones_from_home_page))
-    print("\n" + str(merge_phones_like_at_home_page(all_phones_from_edit_page)))
     assert all_phones_from_home_page == merge_phones_like_at_home_page(all_phones_from_edit_page)
 
     # Check emails
@@ -31,6 +29,9 @@ def test_check_some_account_data(app):
     # Check names
     assert account_at_edit_page.firstname == account_at_home_page.firstname
     assert account_at_edit_page.lastname == account_at_home_page.lastname
+
+    # Check address
+    assert all_phones_from_home_page.address == account_at_edit_page.address
 
 
 def remove_special_symbols(s):
