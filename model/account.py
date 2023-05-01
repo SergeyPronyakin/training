@@ -6,12 +6,13 @@ class AccountData:
 
     def __init__(self, firstname="Firstname", middlename="Middlename", lastname="Lastname", nickname="Cobra",
                  all_phones_from_home_page=None, mobile="89160000101", home_phone="8(495)7550055",
-                 work_phone="+7(777)3330055", email="test@gmail.com", email2="test2@gmail.com", email3="test3@gmail.com",
+                 work_phone="+7(777)3330055", all_emails_from_home_page=None, email="test@gmail.com", email2="test2@gmail.com", email3="test3@gmail.com",
                  address="Moscow, Matrosa Zheleznyaka st, 11", id=None):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
         self.nickname = nickname
+        self.all_emails_from_home_page = all_emails_from_home_page
         self.email = email
         self.email2 = email2
         self.email3 = email3

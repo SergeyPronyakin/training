@@ -158,16 +158,20 @@ class AccountHelper:
         lastname = self.get_account_attributes_text("//td[2]")
         firstname = self.get_account_attributes_text("//td[3]")
         address = self.get_account_attributes_text("//td[4]")
-        emails = self.get_account_attributes_text("//td[5]")
+        all_emails_from_home_page = self.get_account_attributes_text("//td[5]")
+        splitlines_emails = self.get_account_attributes_text("//td[5]")[0].splitlines()
         all_phones_from_home_page = self.get_account_attributes_text("//td[6]")
         splitlines_phones = self.get_account_attributes_text("//td[6]")[0].splitlines()
         ids = self.get_account_ids()
 
-        return [AccountData(firstname=firstname, lastname=lastname, address=address, email=emails,
-                            all_phones_from_home_page=all_phones_from_home_page, home_phone=splitlines_phones[0],
-                            mobile=splitlines_phones[1], work_phone=splitlines_phones[2], id=ids)
-                for firstname, lastname, address, emails, all_phones_from_home_page, ids
-                in zip(firstname, lastname, address, emails, all_phones_from_home_page, ids)]
+        return [AccountData(firstname=firstname, lastname=lastname, address=address,
+                            all_emails_from_home_page=all_emails_from_home_page,
+                            email=splitlines_emails[0], email2=splitlines_emails[1], email3=splitlines_emails[2],
+                            all_phones_from_home_page=all_phones_from_home_page,
+                            home_phone=splitlines_phones[0], mobile=splitlines_phones[1], work_phone=splitlines_phones[2],
+                            id=ids)
+                for firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids
+                in zip(firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids)]
 
     def get_accounts_count_from_page(self) -> str:
         wd = self.app.wd
@@ -184,3 +188,6 @@ class AccountHelper:
                                 map(lambda x: self.remove_special_symbols(x),
                                     filter(lambda x: x is not None,
                                            [contact.home_phone, contact.mobile, contact.work_phone]))))
+
+    def merge_emails_like_at_home_page(self, contact):
+        return "\n".join([contact.email, contact.email2, contact.email3])
