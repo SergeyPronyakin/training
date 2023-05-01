@@ -5,8 +5,8 @@ from sys import maxsize
 class AccountData:
 
     def __init__(self, firstname="Firstname", middlename="Middlename", lastname="Lastname", nickname="Cobra",
-                 mobile="89160000101", home_phone="8(495)7550055", work_phone="+7(777)3330055",
-                 email="test@gmail.com", email2="test2@gmail.com", email3="test3@gmail.com",
+                 all_phones_from_home_page=None, mobile="89160000101", home_phone="8(495)7550055",
+                 work_phone="+7(777)3330055", email="test@gmail.com", email2="test2@gmail.com", email3="test3@gmail.com",
                  address="Moscow, Matrosa Zheleznyaka st, 11", id=None):
         self.firstname = firstname
         self.middlename = middlename
@@ -16,6 +16,7 @@ class AccountData:
         self.email2 = email2
         self.email3 = email3
         self.mobile = mobile
+        self.all_phones_from_home_page = all_phones_from_home_page
         self.home_phone = home_phone
         self.work_phone = work_phone
         self.address = address
