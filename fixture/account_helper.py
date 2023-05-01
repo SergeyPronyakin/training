@@ -1,3 +1,4 @@
+import re
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -174,3 +175,12 @@ class AccountHelper:
         num = WebDriverWait(wd, 5).until(
             EC.presence_of_element_located((By.ID, "search_count")))
         return num.text
+
+    def remove_special_symbols(self, s):
+        return re.sub("[() -]", "", s)
+
+    def merge_phones_like_at_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.remove_special_symbols(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.home_phone, contact.mobile, contact.work_phone]))))
