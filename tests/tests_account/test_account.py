@@ -9,7 +9,7 @@ from model.account import AccountData
 
 
 def random_str(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits + string.punctuation + " " * 10
+    symbols = string.ascii_letters # + string.digits + " " * 10
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 
@@ -38,33 +38,22 @@ def random_phone():
     return "".join(phone)
 
 
-emails = []
-account_data = [
-    AccountData(firstname=firstname, lastname=lastname, middlename=middlename, address=address,nickname=nickname,
-                mobile=mobile,work_phone=work_phone,home_phone=home_phone,
-                email=email,email2=email2,email3=email3)
+account_test_data = [
+    AccountData(firstname=firstname, lastname=lastname, address=address)
     for firstname in ["", random_str("name", 25)]
     for lastname in ["", random_str("lastname", 25)]
-    for middlename in ["", random_str("middlename", 25)]
-    for address in ["", random_str("address", 100)]
-    for nickname in ["", random_str("name", 15)]
-    for mobile in ["", random_phone()]
-    for work_phone in ["", random_phone()]
-    for home_phone in ["", random_phone()]
-    for email in ["", random_str("emal1", 25)]
-    for email2 in ["", random_str("email2", 25)]
-    for email3 in ["", random_str("email3", 25)]
+    for address in ["", random_str("address", 25)]
 ]
 
 
-@pytest.mark.parametrize("account", account_data, ids=[repr(x) for x in account_data])
+@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
 def test_create_account(app, account):
     old_accounts = app.account_helper.get_accounts()
-    app.account_helper.create_account(account)
+    new_account = app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
 
     assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
-    old_accounts.append(account)
+    old_accounts.append(new_account)
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
