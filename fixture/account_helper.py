@@ -121,6 +121,8 @@ class AccountHelper:
             self.input_text_in_field(account.mobile, "mobile")
         if account.email:
             self.input_text_in_field(account.email, "email")
+        if account.address:
+            self.input_text_in_field(account.email, "address")
 
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()

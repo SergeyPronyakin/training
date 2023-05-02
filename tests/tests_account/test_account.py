@@ -9,7 +9,7 @@ from model.account import AccountData
 
 
 def random_str(prefix, maxlen):
-    symbols = string.ascii_letters # + string.digits + " " * 10
+    symbols = string.ascii_letters + string.digits + " " * 10
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 
@@ -40,9 +40,9 @@ def random_phone():
 
 account_test_data = [
     AccountData(firstname=firstname, lastname=lastname, address=address)
-    for firstname in ["", random_str("name", 25)]
-    for lastname in ["", random_str("lastname", 25)]
-    for address in ["", random_str("address", 25)]
+    for firstname in ["", random_str("name", 5)]
+    for lastname in ["", random_str("lastname", 5)]
+    for address in ["", random_str("address", 5)]
 ]
 
 
@@ -76,19 +76,18 @@ def test_delete_one_account(app):
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
-def test_edit_some_accounts(app):
-    assert_data = ''.join(random.choices(string.ascii_lowercase, k=5))
+@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
+def test_edit_some_accounts(app, account):
     if not app.account_helper.count_of_accounts():
-        app.account_helper.create_account(AccountData())
+        app.account_helper.create_account(account)
 
     old_accounts = app.account_helper.get_accounts()
     index = randrange(len(old_accounts))
-    account_data = AccountData(firstname=assert_data, lastname=assert_data)
-    account_data.id = old_accounts[index].id
+    account.id = old_accounts[index].id
 
-    app.account_helper.edit_some_account_by_index(account_data, index)
+    app.account_helper.edit_some_account_by_index(account, index)
     new_accounts = app.account_helper.get_accounts()
-    old_accounts[index] = account_data
+    old_accounts[index] = new_accounts[index]
 
     assert sorted(old_accounts, key=AccountData.id_or_max) == sorted(new_accounts, key=AccountData.id_or_max)
 
