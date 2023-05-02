@@ -1,11 +1,28 @@
 # -*- coding: utf-8 -*-
+import pytest
 from model.group import GroupData
-from datetime import datetime
 from random import randrange
+import string
+import random
 
 
-def test_create_group(app):
-    group = GroupData()
+def random_str(prefix, maxlen):
+    symbols = string.ascii_letters + string.digits + string.punctuation + " " * 10
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+
+
+group_data = [
+    GroupData(name=name, footer=footer, header=header)
+    for name in ["", random_str("name", 10)]
+    for footer in ["", random_str("footer", 25)]
+    for header in ["", random_str("name", 25)]
+]
+
+assert_data = [data for data in ["", random_str("Newname", 15)]]
+
+
+@pytest.mark.parametrize("group", group_data, ids=[repr(x) for x in group_data])
+def test_create_group(app, group):
     old_group_list = app.group_helper.groups()
 
     app.group_helper.create_group(group)
@@ -16,9 +33,8 @@ def test_create_group(app):
     assert sorted(new_group_list, key=GroupData.id_or_max) == sorted(old_group_list, key=GroupData.id_or_max)
 
 
-def test_edit_some_group(app):
-    assert_name = "New name " + str(datetime.now())[:-7]
-
+@pytest.mark.parametrize("assert_name", assert_data, ids=[repr(x) for x in assert_data])
+def test_edit_some_group(app, assert_name):
     if not app.group_helper.count_of_groups():
         app.group_helper.create_group(GroupData())
 
