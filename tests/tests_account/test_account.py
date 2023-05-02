@@ -2,17 +2,69 @@
 from random import randrange
 import random
 import string
+
+import pytest
+
 from model.account import AccountData
 
 
-def test_create_account(app):
-    account_data = AccountData()
+def random_str(prefix, maxlen):
+    symbols = string.ascii_letters + string.digits + string.punctuation + " " * 10
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+
+
+def random_int(min, max):
+    return "".join(random.choice("0123456789") for i in range(random.randint(min, max)))
+
+
+def random_phone():
+    phone = []
+    country_codes = [random_int(1, 2)]
+    city_codes = [random_int(1, 4)]
+    random_index = int(random.choice("01"))
+    prefs = ["", "+"][random_index]
+    parenthesis_open = ["", "("][random_index]
+    phone_bodies = [random_int(4, 8)]
+    for a, b, c, d, e in zip(prefs, country_codes, parenthesis_open, city_codes, phone_bodies):
+        phone.append(a)
+        phone.append(b)
+        phone.append(c)
+        phone.append(d)
+        if c:
+            phone.append(")")
+            print(phone)
+        phone.append(e)
+
+    return "".join(phone)
+
+
+emails = []
+account_data = [
+    AccountData(firstname=firstname, lastname=lastname, middlename=middlename, address=address,nickname=nickname,
+                mobile=mobile,work_phone=work_phone,home_phone=home_phone,
+                email=email,email2=email2,email3=email3)
+    for firstname in ["", random_str("name", 25)]
+    for lastname in ["", random_str("lastname", 25)]
+    for middlename in ["", random_str("middlename", 25)]
+    for address in ["", random_str("address", 100)]
+    for nickname in ["", random_str("name", 15)]
+    for mobile in ["", random_phone()]
+    for work_phone in ["", random_phone()]
+    for home_phone in ["", random_phone()]
+    for email in ["", random_str("emal1", 25)]
+    for email2 in ["", random_str("email2", 25)]
+    for email3 in ["", random_str("email3", 25)]
+]
+
+
+@pytest.mark.parametrize("account", account_data, ids=[repr(x) for x in account_data])
+def test_create_account(app, account):
     old_accounts = app.account_helper.get_accounts()
-    app.account_helper.create_account(account_data)
+    app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
 
     assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
-    old_accounts.append(account_data)
+    old_accounts.append(account)
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
