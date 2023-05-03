@@ -190,4 +190,5 @@ class AccountHelper:
                                            [contact.home_phone, contact.mobile, contact.work_phone]))))
 
     def merge_emails_like_at_home_page(self, contact):
-        return "\n".join([contact.email, contact.email2, contact.email3])
+        return "\n".join(filter(lambda x: x != "",
+                                [contact.email, contact.email2, contact.email3]))
