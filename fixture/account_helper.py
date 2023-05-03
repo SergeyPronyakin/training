@@ -1,4 +1,6 @@
 import re
+
+from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -57,7 +59,7 @@ class AccountHelper:
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         return len(wd.find_elements_by_name("entry"))
 
-    def delete_all_accounts(self):
+    def delete_all_accounts_one_by_one(self):
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         count_of_accounts = len(wd.find_elements_by_xpath('//img[@alt="Edit"]'))
@@ -66,6 +68,16 @@ class AccountHelper:
             wd.find_element_by_xpath('//img[@alt="Edit"]').click()
             wd.find_element_by_xpath('//input[@value="Delete"]').click()
             count_of_accounts -= 1
+        self.account_cache = None
+
+    def delete_all_at_ones_accounts(self):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        wd.find_element_by_id("MassCB").click()
+        wd.find_element_by_xpath('//input[@value="Delete"]').click()
+        Alert(wd).accept()
+        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located
+                                   ((By.XPATH, "//*[contains(text(), 'Record successful deleted')]")))
         self.account_cache = None
 
     def delete_first_account(self):
@@ -124,11 +136,12 @@ class AccountHelper:
         if account.address:
             self.input_text_in_field(account.email, "address")
 
+        id = account.id
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
         self.account_cache = None
         return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
-                           mobile=account.mobile, email=account.email)
+                           mobile=account.mobile, email=account.email, id=id)
 
     def edit_first_account(self, account):
         self.edit_some_account_by_index(account, 0)
@@ -192,3 +205,11 @@ class AccountHelper:
     def merge_emails_like_at_home_page(self, contact):
         return "\n".join(filter(lambda x: x != "",
                                 [contact.email, contact.email2, contact.email3]))
+
+    def get_account_by_id(self, id):
+        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        account_ids = self.get_account_ids()
+        for i in account_ids:
+            if i == id:
+                x = account_ids.index(i)
+                return self.get_accounts()[x]
