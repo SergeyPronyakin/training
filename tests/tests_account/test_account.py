@@ -45,9 +45,9 @@ account_test_data = [
     for firstname in ["", random_str("name", 5)]
     for lastname in ["", random_str("lastname", 5)]
     for address in ["", random_str("address", 5)]
-    for email in ["", "tesmail@gmail.com"]
-    for email2 in ["", "tesmail@gmail.com"]
-    for email3 in ["", "tesmail@gmail.com"]
+    for email in ["", "testmail@gmail.com"]
+    for email2 in ["", "testmail2@gmail.com"]
+    for email3 in ["", "testmail3@gmail.com"]
 ]
 
 
@@ -56,10 +56,11 @@ def test_create_account(app, account):
     old_accounts = app.account_helper.get_accounts()
     app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
+
     assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
+
     account.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(account)
     account.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(account)
-
     new_account = AccountData(firstname=account.firstname, lastname=account.lastname, address=account.address,
                               all_emails_from_home_page=account.all_emails_from_home_page,
                               all_phones_from_home_page=account.all_phones_from_home_page)
@@ -96,12 +97,17 @@ def test_edit_some_accounts(app, account):
     index = randrange(len(old_accounts))
     account.id = old_accounts[index].id
 
-    app.account_helper.edit_some_account_by_index(account, index)
-    edition_account_at_home_page = app.account_helper.get_account_by_id(account.id)
-
+    edition_account = app.account_helper.edit_some_account_by_index(account, index)
     new_accounts = app.account_helper.get_accounts()
-    old_accounts[index] = edition_account_at_home_page
 
+    edition_account.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(edition_account)
+    edition_account.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(edition_account)
+    edition_account = AccountData(id=account.id, firstname=edition_account.firstname, lastname=edition_account.lastname,
+                                  address=edition_account.address,
+                                  all_emails_from_home_page=account.all_emails_from_home_page,
+                                  all_phones_from_home_page=account.all_phones_from_home_page)
+
+    old_accounts[index] = edition_account
     assert sorted(old_accounts, key=AccountData.id_or_max) == sorted(new_accounts, key=AccountData.id_or_max)
 
 

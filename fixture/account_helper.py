@@ -23,8 +23,15 @@ class AccountHelper:
         field.clear()
         field.send_keys(text)
 
+    def clear_field(self, selector_name):
+        wd = self.app.wd
+        field = wd.find_element_by_name(selector_name)
+        field.click()
+        field.clear()
+
     def get_text_from_field(self, selector_name):
         wd = self.app.wd
+        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.NAME, selector_name)))
         field = wd.find_element_by_name(selector_name)
         return field.get_attribute("value")
 
@@ -131,8 +138,6 @@ class AccountHelper:
 
         if account.firstname:
             self.input_text_in_field(account.firstname, "firstname")
-        if account.middlename:
-            self.input_text_in_field(account.middlename, "middlename")
         if account.lastname:
             self.input_text_in_field(account.lastname, "lastname")
         if account.mobile:
@@ -140,14 +145,34 @@ class AccountHelper:
         if account.email:
             self.input_text_in_field(account.email, "email")
         if account.address:
-            self.input_text_in_field(account.email, "address")
+            self.input_text_in_field(account.address, "address")
+        if account.home_phone:
+            self.input_text_in_field(account.home_phone, "home")
+        if account.work_phone:
+            self.input_text_in_field(account.work_phone, "work")
+        if account.email2:
+            self.input_text_in_field(account.work_phone, "email2")
+        if account.email3:
+            self.input_text_in_field(account.work_phone, "email3")
 
-        id = account.id
+        account.firstname = self.get_text_from_field("firstname")
+        account.lastname = self.get_text_from_field("lastname")
+        account.mobile = self.get_text_from_field("mobile")
+        account.email = self.get_text_from_field("email")
+        account.address = self.get_text_from_field("address")
+        account.home_phone = self.get_text_from_field("home")
+        account.work_phone = self.get_text_from_field("work")
+        account.email2 = self.get_text_from_field("email2")
+        account.email3 = self.get_text_from_field("email3")
+        account.id = self.get_text_from_field("id")
+
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
         self.account_cache = None
         return AccountData(firstname=account.firstname, lastname=account.lastname,
-                           mobile=account.mobile, email=account.email, id=id)
+                           address=account.address, home_phone=account.home_phone,
+                           mobile=account.mobile, work_phone=account.work_phone,
+                           email=account.email, email2=account.email2, email3=account.email3, id=account.id)
 
     def edit_first_account(self, account):
         self.edit_some_account_by_index(account, 0)
@@ -163,6 +188,8 @@ class AccountHelper:
     def get_account_ids(self) -> list:
         account_ids = []
         wd = self.app.wd
+        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.NAME, "entry")))
         accounts = wd.find_elements_by_name("entry")
         for account in accounts:
             account_id = account.find_element_by_name("selected[]").get_attribute("id")
@@ -179,12 +206,12 @@ class AccountHelper:
         return account_attributes_text
 
     def get_accounts(self) -> list:
+        ids = self.get_account_ids()
         lastname = self.get_account_attributes_text("//td[2]")
         firstname = self.get_account_attributes_text("//td[3]")
         address = self.get_account_attributes_text("//td[4]")
         all_emails_from_home_page = self.get_account_attributes_text("//td[5]")
         all_phones_from_home_page = self.get_account_attributes_text("//td[6]")
-        ids = self.get_account_ids()
 
         return [AccountData(id=ids, firstname=firstname, lastname=lastname,
                             address=address, all_emails_from_home_page=all_emails_from_home_page,
