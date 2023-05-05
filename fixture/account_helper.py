@@ -186,8 +186,8 @@ class AccountHelper:
         all_phones_from_home_page = self.get_account_attributes_text("//td[6]")
         ids = self.get_account_ids()
 
-        return [AccountData(id=ids, lastname=lastname, firstname=firstname, address=address,
-                            all_emails_from_home_page=all_emails_from_home_page,
+        return [AccountData(id=ids, firstname=firstname, lastname=lastname,
+                            address=address, all_emails_from_home_page=all_emails_from_home_page,
                             all_phones_from_home_page=all_phones_from_home_page)
                 for ids, lastname, firstname, address, all_emails_from_home_page, all_phones_from_home_page
                 in zip(ids, lastname, firstname, address, all_emails_from_home_page, all_phones_from_home_page)]

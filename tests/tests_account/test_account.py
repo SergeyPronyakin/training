@@ -51,18 +51,16 @@ account_test_data = [
 ]
 
 
-# @pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
-def test_create_account(app):
-    account = AccountData(firstname="firstname", lastname="lastname", all_phones_from_home_page="89191919",
-                          all_emails_from_home_page="email@test", address="test address")
+@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
+def test_create_account(app, account):
+    # account = AccountData(firstname="firstname", lastname="lastname", all_phones_from_home_page="89191919",
+    #                       all_emails_from_home_page="email@test", address="test address")
 
     old_accounts = app.account_helper.get_accounts()
     app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
     assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
     old_accounts.append(account)
-    print("\n AAAA" + str(sorted(new_accounts, key=AccountData.id_or_max)))
-    print("\n FFFF" + str(sorted(old_accounts, key=AccountData.id_or_max)))
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
