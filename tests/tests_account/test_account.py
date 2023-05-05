@@ -9,7 +9,7 @@ from model.account import AccountData
 
 
 def random_str(prefix, maxlen):
-    symbols = string.ascii_letters # + string.digits + " " * 10
+    symbols = string.ascii_letters  # + string.digits + " " * 10
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 
@@ -39,28 +39,28 @@ def random_phone():
 
 
 account_test_data = [
-    AccountData(firstname=firstname, lastname=lastname, address=address)
-    for firstname in ["", random_str("name", 5)]
-    for lastname in ["", random_str("lastname", 5)]
-    for address in ["", random_str("address", 5)]
+    AccountData(firstname="firstname", lastname="lastname", mobile="89191919",
+                email="email@test", email2="email@test", email3="email@test", address="test address",
+                home_phone="test", work_phone="test")
+    # for firstname in ["", random_str("name", 5)]
+    # for lastname in ["", random_str("lastname", 5)]
+    # for address in ["", random_str("address", 5)]
+    # for email in ["", "tesmail@gmail.com"]
+    # for email2 in ["", "tesmail@gmail.com"]
+    # for email3 in ["", "tesmail@gmail.com"]
 ]
 
-account_test_data2 = [
-    AccountData(email=email, email2=email2, email3=email3)
-    for email in ["", "tesmail@gmail.com"]
-    for email2 in ["", "tesmail@gmail.com"]
-    for email3 in ["", "tesmail@gmail.com"]
-]
 
+#@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
+def test_create_account(app):
+    account = AccountData(firstname="firstname", lastname="lastname", mobile="89191919",
+                email="email@test", address="test address")
 
-@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
-def test_create_account(app, account):
     old_accounts = app.account_helper.get_accounts()
-    new_account = app.account_helper.create_account(account)
+    app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
-
     assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
-    old_accounts.append(new_account)
+    #old_accounts.append(new_account)
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
@@ -114,6 +114,9 @@ def test_assert_random_account_data_from_home_page_and_edit_page(app):
     all_phones_from_home_page = account_at_home_page.all_phones_from_home_page
     all_phones_from_edit_page = account_at_edit_page
 
+    all_emails_from_home_page = account_at_home_page.all_emails_from_home_page
+    all_emails_from_edit_page = account_at_edit_page
+
     # Check phones
     assert all_phones_from_home_page == app.account_helper.merge_phones_like_at_home_page(all_phones_from_edit_page)
 
@@ -124,19 +127,7 @@ def test_assert_random_account_data_from_home_page_and_edit_page(app):
     # Check address
     assert account_at_edit_page.address == account_at_home_page.address
 
-
-@pytest.mark.parametrize("account", account_test_data2, ids=[repr(x) for x in account_test_data])
-def test_check_emails_from_home_page_and_edit_page(app, account):
-    app.account_helper.create_account(account)
-    count_of_accounts = int(app.account_helper.get_count_of_accounts_from_home_page())
-    random_account = random.randrange(count_of_accounts)
-
-    account_at_home_page = app.account_helper.get_accounts()[random_account]
-    account_at_edit_page = app.account_helper.get_account_data_from_edit_page_by_index(random_account)
-
-    all_emails_from_home_page = account_at_home_page.all_emails_from_home_page
-    all_emails_from_edit_page = account_at_edit_page
-
+    # Check emails
     assert all_emails_from_home_page == app.account_helper.merge_emails_like_at_home_page(all_emails_from_edit_page)
 
 

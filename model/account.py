@@ -4,14 +4,12 @@ from sys import maxsize
 
 class AccountData:
 
-    def __init__(self, firstname="Firstname", middlename="Middlename", lastname="Lastname", nickname="Cobra",
-                 all_phones_from_home_page=None, mobile="89160000101", home_phone="8(495)7550055",
-                 work_phone="+7(777)3330055", all_emails_from_home_page=None, email="test@gmail.com", email2="test2@gmail.com", email3="test3@gmail.com",
-                 address="Moscow, Matrosa Zheleznyaka st, 11", id=None):
+    def __init__(self, firstname=None, lastname=None,
+                 all_phones_from_home_page=None, mobile=None, home_phone=None,
+                 work_phone=None, all_emails_from_home_page=None, email=None, email2=None, email3=None,
+                 address=None, id=None):
         self.firstname = firstname
-        self.middlename = middlename
         self.lastname = lastname
-        self.nickname = nickname
         self.all_emails_from_home_page = all_emails_from_home_page
         self.email = email
         self.email2 = email2
@@ -23,37 +21,21 @@ class AccountData:
         self.address = address
         self.id = id
 
-    def test_data(self, assert_text: str):
-        test_data = assert_text + str(datetime.now())
-
-        if self.firstname:
-            self.firstname = test_data
-        if self.middlename:
-            self.middlename = test_data
-        if self.lastname:
-            self.lastname = test_data
-        if self.mobile:
-            self.mobile = test_data
-        if self.email:
-            self.email = test_data
-
-        return self
-
     def __repr__(self):
-        return "%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s" % (
-            self.id, self.firstname, self.middlename, self.lastname, self.nickname,
-            self.mobile, self.work_phone, self.home_phone,
+        return "%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s" % (
+            self.id, self.firstname, self.lastname, self.address, self.all_emails_from_home_page,
+            self.all_phones_from_home_page, self.mobile, self.work_phone, self.home_phone,
             self.email, self.email2, self.email3)
 
     def __eq__(self, other):
-        return (self.id is None or self.firstname is None or self.middlename is None or
+        return (self.id is None or self.firstname is None or
                 self.lastname is None or other.id is None or
                 self.mobile is None or self.email is None or
                 self.email2 is None or self.email3 is None or
-                self.nickname is None or self.work_phone is None or
+                self.work_phone is None or
                 self.home_phone is None or self.address is None or
-                self.id == other.id) and self.firstname == other.firstname and self.middlename == other.middlename\
-            and self.lastname == other.lastname and self.nickname == other.nickname and self.mobile == other.mobile\
+                self.id == other.id) and self.firstname == other.firstname\
+            and self.lastname == other.lastname and self.mobile == other.mobile\
             and self.email == other.email and self.email2 == other.email2 and self.email3 == other.email3\
             and self.home_phone == other.home_phone and self.work_phone == other.work_phone\
             and self.address == other.address

@@ -32,21 +32,29 @@ class AccountHelper:
         wd = self.app.wd
         self.page_opener.open_page_with_check(self.HOME_PAGE)
         wd.find_element_by_link_text("add new").click()
-        self.input_text_in_field(account.firstname, "firstname")
-        self.input_text_in_field(account.middlename, "middlename")
-        self.input_text_in_field(account.lastname, "lastname")
-        self.input_text_in_field(account.nickname, "nickname")
-        self.input_text_in_field(account.address, "address")
-        self.input_text_in_field(account.home_phone, "home")
-        self.input_text_in_field(account.mobile, "mobile")
-        self.input_text_in_field(account.work_phone, "work")
-        self.input_text_in_field(account.email, "email")
-        self.input_text_in_field(account.email2, "email2")
-        self.input_text_in_field(account.email3, "email3")
+        if account.firstname:
+            self.input_text_in_field(account.firstname, "firstname")
+        if account.lastname:
+            self.input_text_in_field(account.lastname, "lastname")
+        if account.address:
+            self.input_text_in_field(account.address, "address")
+        if account.home_phone:
+            self.input_text_in_field(account.home_phone, "home")
+        if account.mobile:
+            self.input_text_in_field(account.mobile, "mobile")
+        if account.work_phone:
+            self.input_text_in_field(account.work_phone, "work")
+        if account.email:
+            self.input_text_in_field(account.email, "email")
+        if account.email2:
+            self.input_text_in_field(account.email2, "email2")
+        if account.email3:
+            self.input_text_in_field(account.email3, "email3")
         wd.find_element_by_name("submit").click()
+
         self.account_cache = None
-        return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
-                           nickname=account.nickname, address=account.address, home_phone=account.home_phone,
+        return AccountData(firstname=account.firstname, lastname=account.lastname,
+                           address=account.address, home_phone=account.home_phone,
                            mobile=account.mobile, work_phone=account.work_phone,
                            email=account.email, email2=account.email2, email3=account.email3)
 
@@ -102,8 +110,6 @@ class AccountHelper:
         self.get_edit_account_page_by_index_from_home_page(index)
         firstname = self.get_text_from_field("firstname")
         lastname = self.get_text_from_field("lastname")
-        middlename = self.get_text_from_field("middlename")
-        nickname = self.get_text_from_field("nickname")
         mobile = self.get_text_from_field("mobile")
         home_phone = self.get_text_from_field("home")
         work_phone = self.get_text_from_field("work")
@@ -112,8 +118,8 @@ class AccountHelper:
         email3 = self.get_text_from_field("email3")
         address = self.get_text_from_field("address")
         id = self.get_text_from_field("id")
-        return AccountData(firstname=firstname, middlename=middlename, lastname=lastname,
-                           nickname=nickname, address=address, home_phone=home_phone,
+        return AccountData(firstname=firstname, lastname=lastname,
+                           address=address, home_phone=home_phone,
                            mobile=mobile, work_phone=work_phone,
                            email=email, email2=email2, email3=email3, id=id)
 
@@ -140,7 +146,7 @@ class AccountHelper:
         wd.find_element_by_name("update").click()
         self.return_to_the_home_page()
         self.account_cache = None
-        return AccountData(firstname=account.firstname, middlename=account.middlename, lastname=account.lastname,
+        return AccountData(firstname=account.firstname, lastname=account.lastname,
                            mobile=account.mobile, email=account.email, id=id)
 
     def edit_first_account(self, account):
@@ -180,11 +186,11 @@ class AccountHelper:
         all_phones_from_home_page = self.get_account_attributes_text("//td[6]")
         ids = self.get_account_ids()
 
-        return [AccountData(firstname=firstname, lastname=lastname, address=address,
+        return [AccountData(id=ids, lastname=lastname, firstname=firstname, address=address,
                             all_emails_from_home_page=all_emails_from_home_page,
-                            all_phones_from_home_page=all_phones_from_home_page, id=ids)
-                for firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids
-                in zip(firstname, lastname, address, all_emails_from_home_page, all_phones_from_home_page, ids)]
+                            all_phones_from_home_page=all_phones_from_home_page)
+                for ids, lastname, firstname, address, all_emails_from_home_page, all_phones_from_home_page
+                in zip(ids, lastname, firstname, address, all_emails_from_home_page, all_phones_from_home_page)]
 
     def get_count_of_accounts_from_home_page(self) -> str:
         wd = self.app.wd
