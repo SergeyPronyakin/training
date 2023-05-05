@@ -41,7 +41,7 @@ def random_phone():
 account_test_data = [
     AccountData(firstname="firstname", lastname="lastname", mobile="89191919",
                 email="email@test", email2="email@test", email3="email@test", address="test address",
-                home_phone="test", work_phone="test")
+                home_phone="+777777", work_phone="899999999")
     # for firstname in ["", random_str("name", 5)]
     # for lastname in ["", random_str("lastname", 5)]
     # for address in ["", random_str("address", 5)]
@@ -57,10 +57,17 @@ def test_create_account(app, account):
     #                       all_emails_from_home_page="email@test", address="test address")
 
     old_accounts = app.account_helper.get_accounts()
-    app.account_helper.create_account(account)
+    new_account = app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
     assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
-    old_accounts.append(account)
+    account.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(new_account)
+    print('NEW ACCOUNT PHONES' + str(app.account_helper.merge_phones_like_at_home_page(new_account)))
+    account.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(new_account)
+    print('NEW EMAILS PHONES' + str(app.account_helper.merge_emails_like_at_home_page(new_account)))
+    new_account = AccountData(firstname=account.firstname, lastname=account.lastname, address=account.address,
+                              all_emails_from_home_page=account.all_emails_from_home_page,
+                              all_phones_from_home_page=account.all_phones_from_home_page)
+    old_accounts.append(new_account)
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
