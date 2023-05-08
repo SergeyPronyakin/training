@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import pytest
 from model.group import GroupData
 from random import randrange
-from data.generate_groups import group_data, assert_data
 
 
-@pytest.mark.parametrize("group", group_data, ids=[repr(x) for x in group_data])
-def test_create_group(app, group):
+def test_create_group(app, data_groups):
+    group = data_groups
     old_group_list = app.group_helper.groups()
 
     app.group_helper.create_group(group)
@@ -17,12 +15,11 @@ def test_create_group(app, group):
     assert sorted(new_group_list, key=GroupData.id_or_max) == sorted(old_group_list, key=GroupData.id_or_max)
 
 
-@pytest.mark.parametrize("assert_name", assert_data, ids=[repr(x) for x in assert_data])
-def test_edit_some_group(app, assert_name):
+def test_edit_some_group(app):
     if not app.group_helper.count_of_groups():
-        app.group_helper.create_group(GroupData())
+        app.group_helper.create_group(GroupData(name="name", footer="footer", header="header"))
 
-    group = GroupData(name=assert_name)
+    group = GroupData(name="assert_name")
     old_groups = app.group_helper.groups()
     index = randrange(len(old_groups))
     group.id = old_groups[index].id

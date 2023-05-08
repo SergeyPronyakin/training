@@ -33,9 +33,12 @@ class GroupHelper:
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//input[@name='new']")
         wd.find_element_by_name("new").click()
-        self.input_text_in_fields(group.name, "group_name")
-        self.input_text_in_fields(group.header, "group_header")
-        self.input_text_in_fields(group.footer, "group_footer")
+        if group.name:
+            self.input_text_in_fields(group.name, "group_name")
+        if group.header:
+            self.input_text_in_fields(group.header, "group_header")
+        if group.footer:
+            self.input_text_in_fields(group.footer, "group_footer")
         wd.find_element_by_name("submit").click()
         self.return_to_the_group_page()
         self.group_cache = None
