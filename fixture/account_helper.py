@@ -189,7 +189,6 @@ class AccountHelper:
         account_ids = []
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.HOME_PAGE)
-        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.NAME, "entry")))
         accounts = wd.find_elements_by_name("entry")
         for account in accounts:
             account_id = account.find_element_by_name("selected[]").get_attribute("id")

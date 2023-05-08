@@ -40,6 +40,7 @@ class GroupHelper:
             self.input_text_in_fields(group.header, "group_header")
         if group.footer:
             self.input_text_in_fields(group.footer, "group_footer")
+
         wd.find_element_by_name("submit").click()
         self.return_to_the_group_page()
         self.group_cache = None

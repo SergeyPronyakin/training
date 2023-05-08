@@ -1,38 +1,44 @@
 [
   {
+    "py/object": "model.group.GroupData",
     "name": "",
     "header": "",
     "footer": "",
     "id": null
   },
   {
-    "name": "name",
-    "header": "nameKhDUIhC1X",
-    "footer": "footer",
+    "py/object": "model.group.GroupData",
+    "name": "nameOf",
+    "header": "nameduL5ViXaK5QsYuPQlQxnAh8q",
+    "footer": "footerXOyacpz9Iluen",
     "id": null
   },
   {
-    "name": "name12",
-    "header": "nameH1VCIK9",
-    "footer": "footerdu",
+    "py/object": "model.group.GroupData",
+    "name": "nameerDQaAeY",
+    "header": "nameDEyfOFBAyyNlaWXh6",
+    "footer": "footerqppmWo60yEf3MIPnS",
     "id": null
   },
   {
-    "name": "nameHNw",
-    "header": "name",
-    "footer": "footerftokSvD8KmKzr2fuAxTZ",
+    "py/object": "model.group.GroupData",
+    "name": "name1zl0p",
+    "header": "nametfLbVcST2fH",
+    "footer": "footermME56zpdkgsXQAyMA7yK",
     "id": null
   },
   {
-    "name": "namegr8xxT25B",
-    "header": "nameP3j",
-    "footer": "footercmW4SxbX7X1uFQqotHvzDx",
+    "py/object": "model.group.GroupData",
+    "name": "namejZjd",
+    "header": "nameWz50o",
+    "footer": "footer30r8byfliZ",
     "id": null
   },
   {
-    "name": "nameLmXwHq1tK",
-    "header": "nameKbZKw",
-    "footer": "footerOiE08wb15XcmkR1ZuL5jO",
+    "py/object": "model.group.GroupData",
+    "name": "nameQO",
+    "header": "nameUde8cDfO",
+    "footer": "footerGMkCacBQkKT",
     "id": null
   }
 ]
