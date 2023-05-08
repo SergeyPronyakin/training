@@ -28,7 +28,7 @@ def random_str(prefix, maxlen):
 
 
 testdata = [GroupData(name="", footer="", header="")] + [
-    GroupData(name=random_str("name", 10), footer=random_str("footer", 25), header=random_str("name", 25))
+    GroupData(name=random_str("name", 10), footer=random_str("footer", 25), header=random_str("header", 25))
     for i in range(n)
 ]
 

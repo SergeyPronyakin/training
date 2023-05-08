@@ -1,58 +1,11 @@
 # -*- coding: utf-8 -*-
 from random import randrange
 import random
-import string
-
-import pytest
-
 from model.account import AccountData
 
 
-def random_str(prefix, maxlen):
-    symbols = string.ascii_letters  # + string.digits + " " * 10
-    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
-
-
-def random_int(min, max):
-    return "".join(random.choice("0123456789") for i in range(random.randint(min, max)))
-
-
-def random_phone():
-    phone = []
-    country_codes = [random_int(1, 2)]
-    city_codes = [random_int(1, 4)]
-    random_index = int(random.choice("01"))
-    prefs = ["", "+"][random_index]
-    parenthesis_open = ["", "("][random_index]
-    phone_bodies = [random_int(4, 8)]
-    for a, b, c, d, e in zip(prefs, country_codes, parenthesis_open, city_codes, phone_bodies):
-        phone.append(a)
-        phone.append(b)
-        phone.append(c)
-        phone.append(d)
-        if c:
-            phone.append(")")
-            print(phone)
-        phone.append(e)
-
-    return "".join(phone)
-
-
-account_test_data = [
-    AccountData(firstname=firstname, lastname=lastname, mobile="+79161930000",
-                email=email, email2=email2, email3=email3, address=address,
-                home_phone="+77777777", work_phone="899999999")
-    for firstname in ["", random_str("name", 5)]
-    for lastname in ["", random_str("lastname", 5)]
-    for address in ["", random_str("address", 5)]
-    for email in ["", "testmail@gmail.com"]
-    for email2 in ["", "testmail2@gmail.com"]
-    for email3 in ["", "testmail3@gmail.com"]
-]
-
-
-@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
-def test_create_account(app, account):
+def test_create_account(app, json_accounts):
+    account = json_accounts
     old_accounts = app.account_helper.get_accounts()
     app.account_helper.create_account(account)
     new_accounts = app.account_helper.get_accounts()
@@ -88,8 +41,8 @@ def test_delete_one_account(app):
     assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
 
 
-@pytest.mark.parametrize("account", account_test_data, ids=[repr(x) for x in account_test_data])
-def test_edit_some_accounts(app, account):
+def test_edit_some_accounts(app, json_accounts):
+    account = json_accounts
     if not app.account_helper.count_of_accounts():
         app.account_helper.create_account(AccountData())
 
