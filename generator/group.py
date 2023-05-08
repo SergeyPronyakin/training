@@ -2,6 +2,8 @@ import jsonpickle
 import os
 import string
 import random
+
+from fixture.generator_helper import GeneratorHelper
 from model.group import GroupData
 import sys
 import getopt
@@ -22,13 +24,9 @@ for o, a in opts:
         f = a
 
 
-def random_str(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits  # + string.punctuation + " " * 10
-    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
-
-
 testdata = [GroupData(name="", footer="", header="")] + [
-    GroupData(name=random_str("name", 10), footer=random_str("footer", 25), header=random_str("header", 25))
+    GroupData(name=GeneratorHelper().random_str("name", 10), footer=GeneratorHelper().random_str("footer", 25),
+              header=GeneratorHelper().random_str("header", 25))
     for i in range(n)
 ]
 
