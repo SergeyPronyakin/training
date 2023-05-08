@@ -3,8 +3,8 @@ from model.group import GroupData
 from random import randrange
 
 
-def test_create_group(app, data_groups):
-    group = data_groups
+def test_create_group(app, json_groups):
+    group = json_groups
     old_group_list = app.group_helper.groups()
 
     app.group_helper.create_group(group)

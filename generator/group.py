@@ -1,4 +1,4 @@
-import json
+import jsonpickle
 import os
 import string
 import random
@@ -27,13 +27,13 @@ def random_str(prefix, maxlen):
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 
-data_group = [GroupData(name="", footer="", header="")] + [
+testdata = [GroupData(name="", footer="", header="")] + [
     GroupData(name=random_str("name", 10), footer=random_str("footer", 25), header=random_str("name", 25))
     for i in range(n)
 ]
 
-assert_data = [data for data in ["", random_str("Newname", 15)]]
 
 file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", f)
 with open(file, "w") as f_out:
-    f_out.write(json.dumps(data_group, default=lambda x: x.__dict__, indent=2))
+    jsonpickle.set_decoder_options("json", indent=2)
+    f_out.write(jsonpickle.encode(testdata))

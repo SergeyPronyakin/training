@@ -33,6 +33,7 @@ class GroupHelper:
         wd = self.app.wd
         self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//input[@name='new']")
         wd.find_element_by_name("new").click()
+
         if group.name:
             self.input_text_in_fields(group.name, "group_name")
         if group.header:
