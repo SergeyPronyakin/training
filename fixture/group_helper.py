@@ -20,10 +20,6 @@ class GroupHelper:
         field.clear()
         field.send_keys(text)
 
-    def get_group_page(self):
-        wd = self.app.wd
-        return wd.get(self.GROUP_PAGE)
-
     def count_of_groups(self):
         wd = self.app.wd
         self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE)

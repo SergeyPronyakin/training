@@ -8,9 +8,6 @@ from fixture.group_helper import GroupHelper
 
 
 class Application:
-
-    HOME_PAGE = "http://localhost/addressbook/index.php"
-
     def __init__(self, browser, base_url):
         if browser == "firefox":
             self.wd = webdriver.Firefox()
