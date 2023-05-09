@@ -6,7 +6,7 @@ from model.group import GroupData
 
 
 class GroupHelper:
-    GROUP_PAGE = "http://localhost/addressbook/group.php"
+    GROUP_PAGE = "group.php"
     group_cache = None
 
     def __init__(self, app):
@@ -26,12 +26,12 @@ class GroupHelper:
 
     def count_of_groups(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE)
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE)
         return len(wd.find_elements_by_xpath("//div[4]/form/span"))
 
     def create_group(self, group) -> GroupData:
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//input[@name='new']")
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//input[@name='new']")
         wd.find_element_by_name("new").click()
 
         if group.name:
@@ -57,7 +57,7 @@ class GroupHelper:
 
     def edit_group_by_index(self, group, index):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
         groups = wd.find_elements_by_name("selected[]")
         groups[index].click()
         wd.find_element_by_name("edit").click()
@@ -69,7 +69,7 @@ class GroupHelper:
 
     def delete_first_group(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
         group_list = wd.find_elements_by_name("selected[]")
         if group_list:
             group_list[0].click()
@@ -78,7 +78,7 @@ class GroupHelper:
 
     def delete_group_by_index(self, index):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
         group_list = wd.find_elements_by_name("selected[]")
         if group_list:
             group_list[index].click()
@@ -87,7 +87,7 @@ class GroupHelper:
 
     def delete_all_group(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//form/input[6]")
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//form/input[6]")
         all_groups_checkboxes = wd.find_elements_by_name("selected[]")
         for group in all_groups_checkboxes:
             group.click()
@@ -98,7 +98,7 @@ class GroupHelper:
         if self.group_cache:
             return list(self.group_cache)
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.GROUP_PAGE, check_xpath_element="//form/input[6]")
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//form/input[6]")
         self.group_cache = wd.find_elements_by_css_selector("span.group")
         return self.group_cache
 

@@ -11,8 +11,8 @@ class SessionHelper:
     def login(self, userdata):
         wd = self.app.wd
         self.app.open_main_page()
-        username_field = wd.find_element_by_name("user")
         WebDriverWait(wd, 20).until(EC.presence_of_element_located((By.NAME, "user")))
+        username_field = wd.find_element_by_name("user")
         username_field.clear()
         username_field.send_keys(userdata.username)
         wd.find_element_by_name("pass").click()

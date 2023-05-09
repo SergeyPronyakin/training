@@ -1,5 +1,4 @@
 import re
-
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -37,7 +36,7 @@ class AccountHelper:
 
     def create_account(self, account) -> AccountData:
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         wd.find_element_by_link_text("add new").click()
         if account.firstname:
             self.input_text_in_field(account.firstname, "firstname")
@@ -71,12 +70,12 @@ class AccountHelper:
 
     def count_of_accounts(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         return len(wd.find_elements_by_name("entry"))
 
     def delete_all_accounts_one_by_one(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         count_of_accounts = len(wd.find_elements_by_xpath('//img[@alt="Edit"]'))
         while count_of_accounts > 0:
             WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.XPATH, '//img[@alt="Edit"]')))
@@ -87,7 +86,7 @@ class AccountHelper:
 
     def delete_all_at_ones_accounts(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         wd.find_element_by_id("MassCB").click()
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
         Alert(wd).accept()
@@ -101,7 +100,7 @@ class AccountHelper:
 
     def delete_account_by_index(self, index):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         edit_accounts_icons = wd.find_elements_by_xpath('//img[@alt="Edit"]')
         edit_accounts_icons[index].click()
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
@@ -109,7 +108,7 @@ class AccountHelper:
 
     def get_edit_account_page_by_index_from_home_page(self, index):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         edit_accounts_icons = wd.find_elements_by_xpath('//img[@alt="Edit"]')
         edit_accounts_icons[index].click()
 
@@ -132,7 +131,7 @@ class AccountHelper:
 
     def edit_some_account_by_index(self, account, index):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         edit_accounts_icons = wd.find_elements_by_xpath('//img[@alt="Edit"]')
         edit_accounts_icons[index].click()
 
@@ -181,14 +180,14 @@ class AccountHelper:
         if self.account_cache:
             return self.account_cache
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         self.account_cache = wd.find_elements_by_name("entry")
         return self.account_cache
 
     def get_account_ids(self) -> list:
         account_ids = []
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         accounts = wd.find_elements_by_name("entry")
         for account in accounts:
             account_id = account.find_element_by_name("selected[]").get_attribute("id")
@@ -197,7 +196,7 @@ class AccountHelper:
 
     def get_account_attributes_text(self, xpath):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         account_attributes = wd.find_elements_by_xpath(xpath)
         account_attributes_text = []
         for el in account_attributes:
@@ -220,7 +219,7 @@ class AccountHelper:
 
     def get_count_of_accounts_from_home_page(self) -> str:
         wd = self.app.wd
-        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         num = WebDriverWait(wd, 5).until(
             EC.presence_of_element_located((By.ID, "search_count")))
         return num.text
@@ -239,7 +238,7 @@ class AccountHelper:
                                 [contact.email, contact.email2, contact.email3]))
 
     def get_account_by_id(self, id):
-        self.page_opener.open_page_with_check(url=self.HOME_PAGE)
+        self.page_opener.open_page_with_check()
         account_ids = self.get_account_ids()
         for i in account_ids:
             if i == id:
