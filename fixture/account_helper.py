@@ -8,7 +8,6 @@ from model.account import AccountData
 
 
 class AccountHelper:
-    HOME_PAGE = "http://localhost/addressbook/index.php"
     account_cache = None
 
     def __init__(self, app):
