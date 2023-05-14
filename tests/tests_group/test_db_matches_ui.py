@@ -7,6 +7,6 @@ def test_group_list(app, db):
     def clean(group):
         return GroupData(id=group.id, name=group.name.strip())
 
-    groups_from_db = map(clean, db.get_group_list())
+    groups_from_db = map(clean, db.get_groups())
 
     assert sorted(groups_from_ui, key=GroupData.id_or_max) == sorted(groups_from_db, key=GroupData.id_or_max)

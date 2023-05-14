@@ -81,6 +81,21 @@ class GroupHelper:
             wd.find_element_by_name("delete").click()
         self.group_cache = None
 
+    def find_group_by_id(self, id):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//div[4]/form")
+        group_list = wd.find_elements_by_name("selected[]")
+        for group in group_list:
+            id_group = group.get_attribute("value")
+            if id_group == id:
+                return group
+
+    def delete_group_by_id(self, id):
+        wd = self.app.wd
+        self.find_group_by_id(id).click()
+        wd.find_element_by_name("delete").click()
+        self.group_cache = None
+
     def delete_all_group(self):
         wd = self.app.wd
         self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//form/input[6]")
