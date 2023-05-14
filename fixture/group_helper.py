@@ -110,5 +110,5 @@ class GroupHelper:
             group_values.append(group.find_element_by_name('selected[]').get_attribute("value"))
         return group_values
 
-    def groups(self):
+    def get_groups(self):
         return [GroupData(name=name, id=value) for name, value in zip(self.get_group_names(), self.get_group_values())]
