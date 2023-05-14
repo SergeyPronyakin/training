@@ -35,16 +35,19 @@ def test_delete_one_account(app, db, check_ui):
     old_accounts_from_ui = app.account_helper.get_accounts()
     old_accounts = db.get_accounts()
     account = random.choice(old_accounts)
+    deleted_account = app.account_helper.get_account_by_id(str(account.id))
     app.account_helper.delete_account_by_id(str(account.id))
     new_accounts = db.get_accounts()
     old_accounts.remove(account)
     assert sorted(old_accounts, key=AccountData.id_or_max) == sorted(new_accounts, key=AccountData.id_or_max)
 
     if check_ui:
-        new_accounts = app.account_helper.get_accounts()
+        new_accounts_from_ui = app.account_helper.get_accounts()
         count_of_accounts_after_deleting = int(app.account_helper.get_count_of_accounts_from_home_page())
         assert count_of_accounts_before_deleting == count_of_accounts_after_deleting + 1
-        assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts_from_ui, key=AccountData.id_or_max)
+
+        old_accounts_from_ui.remove(deleted_account)
+        assert sorted(new_accounts_from_ui, key=AccountData.id_or_max) == sorted(old_accounts_from_ui, key=AccountData.id_or_max)
 
 
 def test_edit_some_accounts(app, db, json_accounts, check_ui):

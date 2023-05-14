@@ -305,10 +305,17 @@ class AccountHelper:
         return "\n".join(filter(lambda x: x != "",
                                 [contact.email, contact.email2, contact.email3]))
 
-    def get_account_by_id(self, id):
+    def get_account_by_id(self, id) -> AccountData:
+        wd = self.app.wd
         self.page_opener.open_page_with_check()
-        account_ids = self.get_account_ids()
-        for i in account_ids:
-            if i == id:
-                x = account_ids.index(i)
-                return self.get_accounts()[x]
+        x = 0
+        for acc in wd.find_elements_by_name('selected[]'):
+            account_id = wd.find_elements_by_name('selected[]')[x].get_attribute("id")
+            if account_id == id:
+                ids = self.get_account_ids()[x]
+                lastname = self.get_account_attributes_text("//td[2]")[x]
+                firstname = self.get_account_attributes_text("//td[3]")[x]
+                address = self.get_account_attributes_text("//td[4]")[x]
+                return AccountData(id=ids, firstname=firstname, lastname=lastname, address=address)
+            x += 1
+
