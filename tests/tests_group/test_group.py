@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import random
-
 from model.group import GroupData
 
 
-def test_create_group(app, db, json_groups):
+def test_create_group(app, db, check_ui, json_groups):
     group = json_groups
     old_group_list = db.get_groups()
     app.group_helper.create_group(group)
@@ -12,8 +11,13 @@ def test_create_group(app, db, json_groups):
     old_group_list.append(group)
     assert sorted(new_group_list, key=GroupData.id_or_max) == sorted(old_group_list, key=GroupData.id_or_max)
 
+    if check_ui:
+        new_group_list_from_ui = app.group_helper.get_groups()
+        assert sorted(new_group_list, key=GroupData.id_or_max) == sorted(new_group_list_from_ui,
+                                                                         key=GroupData.id_or_max)
 
-def test_edit_some_group(app, db):
+
+def test_edit_some_group(app, db, check_ui):
     if not db.get_groups():
         app.group_helper.create_group(GroupData(name="name", footer="footer", header="header"))
 
@@ -30,8 +34,13 @@ def test_edit_some_group(app, db):
     old_groups[edition_group_index] = edition_group
     assert sorted(old_groups, key=GroupData.id_or_max) == sorted(new_groups, key=GroupData.id_or_max)
 
+    if check_ui:
+        new_group_list_from_ui = app.group_helper.get_groups()
+        assert sorted(old_groups, key=GroupData.id_or_max) == sorted(new_group_list_from_ui,
+                                                                     key=GroupData.id_or_max)
 
-def test_delete_some_group(app, db):
+
+def test_delete_some_group(app, db, check_ui):
     if not db.get_groups():
         app.group_helper.create_group(GroupData())
 
@@ -43,11 +52,21 @@ def test_delete_some_group(app, db):
 
     assert sorted(old_groups, key=GroupData.id_or_max) == sorted(new_groups, key=GroupData.id_or_max)
 
+    if check_ui:
+        new_group_list_from_ui = app.group_helper.get_groups()
+        assert sorted(old_groups, key=GroupData.id_or_max) == sorted(new_group_list_from_ui,
+                                                                     key=GroupData.id_or_max)
 
-def test_delete_all_group(app, db):
+
+def test_delete_all_group(app, db, check_ui):
     if not db.get_groups():
         app.group_helper.create_group(GroupData())
     app.group_helper.delete_all_group()
 
     assert app.group_helper.count_of_groups() == 0
     assert len(db.get_groups()) == 0
+
+    if check_ui:
+        new_group_list_from_ui = app.group_helper.get_groups()
+        assert sorted(db.get_groups(), key=GroupData.id_or_max) == sorted(new_group_list_from_ui,
+                                                                          key=GroupData.id_or_max)
