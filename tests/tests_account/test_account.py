@@ -4,13 +4,12 @@ import random
 from model.account import AccountData
 
 
-def test_create_account(app, json_accounts):
+def test_create_account(app, db, json_accounts, check_ui):
     account = json_accounts
-    old_accounts = app.account_helper.get_accounts()
+    old_accounts_from_ui = app.account_helper.get_accounts()
+    old_accounts_from_bd = db.get_accounts()
     app.account_helper.create_account(account)
-    new_accounts = app.account_helper.get_accounts()
-
-    assert app.account_helper.count_of_accounts() == len(old_accounts) + 1
+    new_accounts_from_db = db.get_accounts()
 
     account.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(account)
     account.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(account)
@@ -18,8 +17,13 @@ def test_create_account(app, json_accounts):
                               all_emails_from_home_page=account.all_emails_from_home_page,
                               all_phones_from_home_page=account.all_phones_from_home_page)
 
-    old_accounts.append(new_account)
-    assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
+    old_accounts_from_bd.append(account)
+    assert sorted(old_accounts_from_bd, key=AccountData.id_or_max) == sorted(new_accounts_from_db, key=AccountData.id_or_max)
+
+    if check_ui:
+        old_accounts_from_ui.append(new_account)
+        new_accounts_from_ui = app.account_helper.get_accounts()
+        assert sorted(new_accounts_from_ui, key=AccountData.id_or_max) == sorted(old_accounts_from_ui, key=AccountData.id_or_max)
 
 
 def test_delete_one_account(app):
