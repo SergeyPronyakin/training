@@ -2,7 +2,6 @@
 import random
 
 from model.group import GroupData
-from random import randrange
 
 
 def test_create_group(app, db, json_groups):
@@ -14,19 +13,21 @@ def test_create_group(app, db, json_groups):
     assert sorted(new_group_list, key=GroupData.id_or_max) == sorted(old_group_list, key=GroupData.id_or_max)
 
 
-def test_edit_some_group(app):
-    if not app.group_helper.count_of_groups():
+def test_edit_some_group(app, db):
+    if not db.get_groups():
         app.group_helper.create_group(GroupData(name="name", footer="footer", header="header"))
 
-    group = GroupData(name="assert_name")
-    old_groups = app.group_helper.get_groups()
-    index = randrange(len(old_groups))
-    group.id = old_groups[index].id
-    app.group_helper.edit_group_by_index(group, index)
-    new_groups = app.group_helper.get_groups()
+    old_groups = db.get_groups()
+    group = random.choice(old_groups)
+    edition_group_index = old_groups.index(group)
+    edition_group = app.group_helper.edit_group_by_id(GroupData(name="assert_name", footer="footer_test"), group.id)
+    new_groups = db.get_groups()
+
+    edition_group = GroupData(id=group.id, name=edition_group.name,
+                              footer=edition_group.footer, header=group.header)
 
     assert len(old_groups) == app.group_helper.count_of_groups()
-    old_groups[index] = group
+    old_groups[edition_group_index] = edition_group
     assert sorted(old_groups, key=GroupData.id_or_max) == sorted(new_groups, key=GroupData.id_or_max)
 
 
@@ -49,4 +50,4 @@ def test_delete_all_group(app, db):
     app.group_helper.delete_all_group()
 
     assert app.group_helper.count_of_groups() == 0
-    assert db.get_groups() == 0
+    assert len(db.get_groups()) == 0

@@ -22,7 +22,7 @@ class GroupHelper:
 
     def count_of_groups(self):
         wd = self.app.wd
-        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE)
+        self.page_opener.open_page_with_check(part_of_url=self.GROUP_PAGE, check_xpath_element="//input[@name='new']")
         return len(wd.find_elements_by_xpath("//div[4]/form/span"))
 
     def create_group(self, group) -> GroupData:
@@ -57,11 +57,23 @@ class GroupHelper:
         groups = wd.find_elements_by_name("selected[]")
         groups[index].click()
         wd.find_element_by_name("edit").click()
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
+
+        if group.name:
+            wd.find_element_by_name("group_name").click()
+            wd.find_element_by_name("group_name").clear()
+            wd.find_element_by_name("group_name").send_keys(group.name)
+        if group.header:
+            wd.find_element_by_name("group_header").click()
+            wd.find_element_by_name("group_header").clear()
+            wd.find_element_by_name("group_header").send_keys(group.header)
+        if group.footer:
+            wd.find_element_by_name("group_footer").click()
+            wd.find_element_by_name("group_footer").clear()
+            wd.find_element_by_name("group_footer").send_keys(group.footer)
+
         wd.find_element_by_name("update").click()
         self.group_cache = None
+        return GroupData(id=group.id, name=group.name, header=group.header, footer=group.footer)
 
     def delete_first_group(self):
         wd = self.app.wd
@@ -80,6 +92,28 @@ class GroupHelper:
             group_list[index].click()
             wd.find_element_by_name("delete").click()
         self.group_cache = None
+
+    def edit_group_by_id(self, group, id):
+        wd = self.app.wd
+        self.find_group_by_id(id).click()
+        wd.find_element_by_name("edit").click()
+
+        if group.name:
+            wd.find_element_by_name("group_name").click()
+            wd.find_element_by_name("group_name").clear()
+            wd.find_element_by_name("group_name").send_keys(group.name)
+        if group.header:
+            wd.find_element_by_name("group_header").click()
+            wd.find_element_by_name("group_header").clear()
+            wd.find_element_by_name("group_header").send_keys(group.header)
+        if group.footer:
+            wd.find_element_by_name("group_footer").click()
+            wd.find_element_by_name("group_footer").clear()
+            wd.find_element_by_name("group_footer").send_keys(group.footer)
+
+        wd.find_element_by_name("update").click()
+        self.group_cache = None
+        return GroupData(id=group.id, name=group.name, header=group.header, footer=group.footer)
 
     def find_group_by_id(self, id):
         wd = self.app.wd
