@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from random import randrange
 import random
 from model.account import AccountData
 
@@ -33,6 +32,7 @@ def test_delete_one_account(app, db, check_ui):
         app.account_helper.create_account(AccountData())
 
     count_of_accounts_before_deleting = int(app.account_helper.get_count_of_accounts_from_home_page())
+    old_accounts_from_ui = app.account_helper.get_accounts()
     old_accounts = db.get_accounts()
     account = random.choice(old_accounts)
     app.account_helper.delete_account_by_id(str(account.id))
@@ -44,7 +44,7 @@ def test_delete_one_account(app, db, check_ui):
         new_accounts = app.account_helper.get_accounts()
         count_of_accounts_after_deleting = int(app.account_helper.get_count_of_accounts_from_home_page())
         assert count_of_accounts_before_deleting == count_of_accounts_after_deleting + 1
-        assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts, key=AccountData.id_or_max)
+        assert sorted(new_accounts, key=AccountData.id_or_max) == sorted(old_accounts_from_ui, key=AccountData.id_or_max)
 
 
 def test_edit_some_accounts(app, db, json_accounts, check_ui):
@@ -127,18 +127,23 @@ def test_assert_random_account_data_from_home_page_and_edit_page(app):
     assert all_emails_from_home_page == app.account_helper.merge_emails_like_at_home_page(all_emails_from_edit_page)
 
 
-def test_delete_all_accounts(app):
-    if not app.account_helper.count_of_accounts():
+def test_delete_all_accounts(app, db, check_ui):
+    if not db.get_accounts():
         app.account_helper.create_account(AccountData())
 
     count_of_accounts_before_deleting = int(app.account_helper.get_count_of_accounts_from_home_page())
-    old_accounts = app.account_helper.get_accounts()
+    old_accounts = db.get_accounts()
 
     app.account_helper.delete_all_at_ones_accounts()
+    accounts_after_deletion = db.get_accounts()
 
-    count_of_accounts_after_deleting = int(app.account_helper.get_count_of_accounts_from_home_page())
-
-    assert app.account_helper.count_of_accounts() == 0
     assert len(old_accounts) > 0
-    assert count_of_accounts_before_deleting >= count_of_accounts_after_deleting
-    assert count_of_accounts_after_deleting == 0
+    assert len(accounts_after_deletion) == 0
+
+    if check_ui:
+        count_of_accounts_after_deleting = int(app.account_helper.get_count_of_accounts_from_home_page())
+
+        assert app.account_helper.count_of_accounts() == 0
+        assert count_of_accounts_before_deleting >= count_of_accounts_after_deleting
+        assert count_of_accounts_after_deleting == 0
+
