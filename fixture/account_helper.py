@@ -105,6 +105,22 @@ class AccountHelper:
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
         self.account_cache = None
 
+    def delete_account_by_id(self, id):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check()
+        accounts = wd.find_elements_by_name('selected[]')
+
+        for account in accounts:
+            account_id = account.get_attribute("id")
+            print(account_id)
+            if account_id == id:
+                account.click()
+        wd.find_element_by_xpath('//input[@value="Delete"]').click()
+        Alert(wd).accept()
+        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located
+                                   ((By.XPATH, "//*[contains(text(), 'Record successful deleted')]")))
+        self.account_cache = None
+
     def get_edit_account_page_by_index_from_home_page(self, index):
         wd = self.app.wd
         self.page_opener.open_page_with_check()
