@@ -190,12 +190,17 @@ class AccountHelper:
 
     def edit_some_account_by_id(self, account, id):
         wd = self.app.wd
-        accounts = self.get_account_objects()
+        self.page_opener.open_page_with_check()
 
-        for acc in accounts:
-            acc = acc.find_element_by_name("selected[]")
-            if acc.get_attribute("id") == id:
-                acc.find_element_by_xpath('//img[@alt="Edit"]').click()
+        x = 0
+        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.NAME, 'selected[]')))
+        for acc in wd.find_elements_by_name('selected[]'):
+            account_id = wd.find_elements_by_name('selected[]')[x].get_attribute("id")
+            if account_id == id:
+                print("ID " + str(account_id))
+                acc.find_elements_by_xpath('//img[@alt="Edit"]')[x].click()
+                break
+            x += 1
 
         if account.firstname:
             self.input_text_in_field(account.firstname, "firstname")
@@ -243,6 +248,7 @@ class AccountHelper:
             return self.account_cache
         wd = self.app.wd
         self.page_opener.open_page_with_check()
+        WebDriverWait(wd, 5).until(EC.presence_of_all_elements_located((By.NAME, "entry")))
         self.account_cache = wd.find_elements_by_name("entry")
         return self.account_cache
 

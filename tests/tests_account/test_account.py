@@ -59,17 +59,34 @@ def test_edit_some_accounts(app, db, json_accounts, check_ui):
     edition_group = app.account_helper.edit_some_account_by_id(account, str(edition_account_data.id))
     all_accounts_after_edition_from_db = db.get_accounts()
 
-    edition_account_data.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(
+    edition_group.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(
         edition_account_data)
-    edition_account_data.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(
+    edition_group.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(
         edition_account_data)
-    edition_group = AccountData(id=account.id, firstname=edition_group.firstname,
+
+    # Create edition group object by UI data
+    edition_group = AccountData(firstname=edition_group.firstname,
                                 lastname=edition_group.lastname,
                                 address=edition_group.address,
                                 all_emails_from_home_page=edition_group.all_emails_from_home_page,
                                 all_phones_from_home_page=edition_group.all_phones_from_home_page)
 
-    old_accounts[edition_account_index] = edition_account_data
+    old_accounts[edition_account_index] = edition_group
+
+    created_edition_accounts_from_db = all_accounts_after_edition_from_db[edition_account_index]
+    created_edition_accounts_from_db.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(
+        edition_account_data)
+    created_edition_accounts_from_db.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(
+        edition_account_data)
+
+    # Create edition group object by DB data
+    created_edition_accounts_from_db = AccountData(firstname=created_edition_accounts_from_db.firstname,
+                                                   lastname=created_edition_accounts_from_db.lastname,
+                                                   address=created_edition_accounts_from_db.address,
+                                                   all_emails_from_home_page=created_edition_accounts_from_db.all_emails_from_home_page,
+                                                   all_phones_from_home_page=created_edition_accounts_from_db.all_phones_from_home_page)
+    all_accounts_after_edition_from_db[edition_account_index] = created_edition_accounts_from_db
+
     assert sorted(old_accounts, key=AccountData.id_or_max) == sorted(all_accounts_after_edition_from_db,
                                                                      key=AccountData.id_or_max)
 

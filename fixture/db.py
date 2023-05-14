@@ -34,7 +34,7 @@ class DbFixture:
                 (id, firstname, lastname, mobile, home, work, email, email2, email3, address) = row
                 account_list.append(AccountData(id=id, firstname=firstname, lastname=lastname,
                                                 mobile=mobile, home_phone=home, work_phone=work,
-                                                email=email, email2=email2, email3=email3, address=address, ))
+                                                email=email, email2=email2, email3=email3, address=address ))
         finally:
             cursor.close()
         return account_list
