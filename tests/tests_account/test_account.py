@@ -69,7 +69,8 @@ def test_edit_some_accounts(app, db, json_accounts, check_ui):
         edition_account_data_from_db)
 
     # Create edition account object by DB data
-    created_edition_accounts_from_db = AccountData(id=edited_account.id, firstname=created_edition_accounts_from_db.firstname,
+    created_edition_accounts_from_db = AccountData(id=edited_account.id,
+                                                   firstname=created_edition_accounts_from_db.firstname,
                                                    lastname=created_edition_accounts_from_db.lastname,
                                                    address=created_edition_accounts_from_db.address,
                                                    all_emails_from_home_page=created_edition_accounts_from_db.all_emails_from_home_page,
@@ -159,3 +160,30 @@ def test_delete_all_accounts(app, db, check_ui):
         assert app.account_helper.count_of_accounts() == 0
         assert count_of_accounts_before_deleting >= count_of_accounts_after_deleting
         assert count_of_accounts_after_deleting == 0
+
+
+def test_assert_accounts_from_home_page_with_db_data(app, db):
+    if not db.get_accounts():
+        app.account_helper.create_account(AccountData())
+
+    # Accounts data from UI
+    accounts_from_ui = app.account_helper.get_accounts()
+    accounts_from_ui_list = []
+    for acc in accounts_from_ui:
+        accounts_from_ui_list.append(
+            AccountData(id=acc.id, firstname=acc.firstname, lastname=acc.lastname, address=acc.address,
+                        all_emails_from_home_page=acc.all_emails_from_home_page,
+                        all_phones_from_home_page=acc.all_phones_from_home_page))
+
+    # Accounts data from DB
+    accounts_from_db = db.get_accounts()
+    accounts_from_db_list = []
+    for acc in accounts_from_db:
+        acc.all_phones_from_home_page = app.account_helper.merge_phones_like_at_home_page(acc)
+        acc.all_emails_from_home_page = app.account_helper.merge_emails_like_at_home_page(acc)
+        accounts_from_db_list.append(
+            AccountData(id=acc.id, firstname=acc.firstname, lastname=acc.lastname, address=acc.address,
+                        all_emails_from_home_page=acc.all_emails_from_home_page,
+                        all_phones_from_home_page=acc.all_phones_from_home_page))
+
+    assert sorted(accounts_from_ui_list, key=AccountData.id_or_max) == sorted(accounts_from_db_list, key=AccountData.id_or_max)
