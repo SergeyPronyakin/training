@@ -197,7 +197,6 @@ class AccountHelper:
         for acc in wd.find_elements_by_name('selected[]'):
             account_id = wd.find_elements_by_name('selected[]')[x].get_attribute("id")
             if account_id == id:
-                print("ID " + str(account_id))
                 acc.find_elements_by_xpath('//img[@alt="Edit"]')[x].click()
                 break
             x += 1
