@@ -34,11 +34,16 @@ class DbFixture:
                 (id, firstname, lastname, mobile, home, work, email, email2, email3, address) = row
                 account_list.append(AccountData(id=id, firstname=firstname, lastname=lastname,
                                                 mobile=mobile, home_phone=home, work_phone=work,
-                                                email=email, email2=email2, email3=email3, address=address ))
+                                                email=email, email2=email2, email3=email3, address=address))
         finally:
             cursor.close()
         return account_list
 
+    def create_account(self):
+        cursor = self.connection.cursor()
+        cursor.execute("INSERT INTO addressbook (firstname, middlename, lastname, nickname, company, title, address, home, mobile, work, fax, email, email2, email3, im, im2, im3, homepage, bday, bmonth, byear, aday, amonth, ayear, address2,phone2, notes, deprecated ) VALUES ('AAAA', 'test2', 'test3', 'test4', 'test4', 'test5', 'address', 'home', 'mobile','work', 'fax', 'email', 'email2', 'email3', 'im', 'im2', 'im3', 'homepage', 10, 10, 1986, 11, 11, 2011, 'address2', 'phone2', 'notes', 0000000)")
+        self.connection.commit()
+        cursor.close()
 
     def destroy(self):
         self.connection.close()

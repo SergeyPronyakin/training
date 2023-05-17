@@ -187,3 +187,11 @@ def test_assert_accounts_from_home_page_with_db_data(app, db):
                         all_phones_from_home_page=acc.all_phones_from_home_page))
 
     assert sorted(accounts_from_ui_list, key=AccountData.id_or_max) == sorted(accounts_from_db_list, key=AccountData.id_or_max)
+
+
+def test_add_account_to_group(app, db):
+    db.create_account()
+
+
+def test_delete_account_from_group():
+    pass

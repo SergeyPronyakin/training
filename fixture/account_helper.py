@@ -1,8 +1,12 @@
 import re
+import time
+
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+
+from fixture.db import DbFixture
 from fixture.openers.page_opener import PageOpener
 from model.account import AccountData
 
@@ -317,4 +321,9 @@ class AccountHelper:
                 address = self.get_account_attributes_text("//td[4]")[x]
                 return AccountData(id=ids, firstname=firstname, lastname=lastname, address=address)
             x += 1
+
+    # def select_account_group(self):
+    #     wd = self.app.wd
+    #     wd.find_element_by_name("new_group").click()
+    #     time.sleep(3)
 
