@@ -2,6 +2,8 @@
 import random
 from model.account import AccountData
 
+new_group_id = None
+
 
 def test_create_account(app, db, json_accounts, check_ui):
     account = json_accounts
@@ -190,10 +192,12 @@ def test_assert_accounts_from_home_page_with_db_data(app, db):
 
 
 def test_add_account_to_group(app, db):
+    global new_group_id
     if not db.get_groups():
-        db.create_group()
+        new_group = db.create_group()
+        new_group_id = new_group[0].id
 
-    app.account_helper.create_account(AccountData(), group_name="first")
+    app.account_helper.create_account(AccountData())
 
 
 def test_delete_account_from_group():

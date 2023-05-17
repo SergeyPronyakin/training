@@ -34,11 +34,11 @@ class AccountHelper:
         field = wd.find_element_by_name(selector_name)
         return field.get_attribute("value")
 
-    def create_account(self, account, group_name=None, group_id=None) -> AccountData:
+    def create_account(self, account, group_id=None) -> AccountData:
         wd = self.app.wd
         self.page_opener.open_page_with_check()
         wd.find_element_by_link_text("add new").click()
-        self.select_account_group(group_name, group_id)
+        self.select_account_group(group_id)
         if account.firstname:
             self.input_text_in_field(account.firstname, "firstname")
         if account.lastname:
@@ -320,24 +320,20 @@ class AccountHelper:
                 return AccountData(id=ids, firstname=firstname, lastname=lastname, address=address)
             x += 1
 
-    def select_account_group(self, group_name=None, group_id=None):
+    def select_account_group(self, group_id: str = None):
         wd = self.app.wd
         wd.find_element_by_name("new_group").click()
         group_list = wd.find_elements_by_xpath("/html/body/div/div[4]/form/select[5]/option")[1:]  # without None group
 
         if group_list:
-            if group_name or group_id:
+            if group_id:
                 for group in group_list:
                     id = group.get_attribute("value")
-                    name = group.text
                     if id == group_id:
                         group.click()
-                        return
-                    if name == group_name:
-                        group.click()
-                        return
+                        return id
             else:
                 random_index = random.randrange(len(group_list))
+                id = group_list[random_index].get_attribute("value")
                 group_list[random_index].click()
-
-
+                return id

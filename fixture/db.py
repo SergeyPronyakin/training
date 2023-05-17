@@ -51,11 +51,25 @@ class DbFixture:
         cursor.close()
 
     def create_group(self):
+        group_name = "group name"
+        group_footer = "group footer"
+        group_header = "group header"
+        group = []
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO group_list(group_name, group_footer, group_header, deprecated) "
-                       "VALUES('group_name', 'group_footer', 'group_header', 00000)")
-        self.connection.commit()
-        cursor.close()
+        try:
+            cursor.execute(f"INSERT INTO group_list(group_name, group_footer, group_header, deprecated) "
+                           f"VALUES('{group_name}', '{group_footer}', '{group_header}', 00000)")
+            cursor.execute('SELECT @@IDENTITY')
+            # Get
+            for row in cursor:
+                id = str(row)[1:-2]
+                group.append(GroupData(id=id, name=group_name, footer=group_footer, header=group_header))
+            print("SDDSDS" + str(group))
+            self.connection.commit()
+
+        finally:
+            cursor.close()
+        return group
 
     def destroy(self):
         self.connection.close()
