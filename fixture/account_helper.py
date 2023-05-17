@@ -1,12 +1,9 @@
+import random
 import re
-import time
-
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
-from fixture.db import DbFixture
 from fixture.openers.page_opener import PageOpener
 from model.account import AccountData
 
@@ -37,10 +34,11 @@ class AccountHelper:
         field = wd.find_element_by_name(selector_name)
         return field.get_attribute("value")
 
-    def create_account(self, account) -> AccountData:
+    def create_account(self, account, group_name=None, group_id=None) -> AccountData:
         wd = self.app.wd
         self.page_opener.open_page_with_check()
         wd.find_element_by_link_text("add new").click()
+        self.select_account_group(group_name, group_id)
         if account.firstname:
             self.input_text_in_field(account.firstname, "firstname")
         if account.lastname:
@@ -322,8 +320,24 @@ class AccountHelper:
                 return AccountData(id=ids, firstname=firstname, lastname=lastname, address=address)
             x += 1
 
-    # def select_account_group(self):
-    #     wd = self.app.wd
-    #     wd.find_element_by_name("new_group").click()
-    #     time.sleep(3)
+    def select_account_group(self, group_name=None, group_id=None):
+        wd = self.app.wd
+        wd.find_element_by_name("new_group").click()
+        group_list = wd.find_elements_by_xpath("/html/body/div/div[4]/form/select[5]/option")[1:]  # without None group
+
+        if group_list:
+            if group_name or group_id:
+                for group in group_list:
+                    id = group.get_attribute("value")
+                    name = group.text
+                    if id == group_id:
+                        group.click()
+                        return
+                    if name == group_name:
+                        group.click()
+                        return
+            else:
+                random_index = random.randrange(len(group_list))
+                group_list[random_index].click()
+
 

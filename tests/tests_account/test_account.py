@@ -190,7 +190,10 @@ def test_assert_accounts_from_home_page_with_db_data(app, db):
 
 
 def test_add_account_to_group(app, db):
-    db.create_account()
+    if not db.get_groups():
+        db.create_group()
+
+    app.account_helper.create_account(AccountData(), group_name="first")
 
 
 def test_delete_account_from_group():

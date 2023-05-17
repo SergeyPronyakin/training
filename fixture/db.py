@@ -41,7 +41,19 @@ class DbFixture:
 
     def create_account(self):
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO addressbook (firstname, middlename, lastname, nickname, company, title, address, home, mobile, work, fax, email, email2, email3, im, im2, im3, homepage, bday, bmonth, byear, aday, amonth, ayear, address2,phone2, notes, deprecated ) VALUES ('AAAA', 'test2', 'test3', 'test4', 'test4', 'test5', 'address', 'home', 'mobile','work', 'fax', 'email', 'email2', 'email3', 'im', 'im2', 'im3', 'homepage', 10, 10, 1986, 11, 11, 2011, 'address2', 'phone2', 'notes', 0000000)")
+        cursor.execute("INSERT INTO addressbook (firstname, middlename, lastname, nickname, company, title, address,"
+                       " home, mobile, work, fax, email, email2, email3, im, im2, im3, homepage, bday, bmonth, byear,"
+                       " aday, amonth, ayear, address2,phone2, notes, deprecated ) VALUES ('AAAA', 'test2', 'test3',"
+                       " 'test4', 'test4', 'test5', 'address', 'home', 'mobile','work', 'fax', 'email', 'email2',"
+                       " 'email3', 'im', 'im2', 'im3', 'homepage', 10, 10, 1986, 11, 11, 2011, 'address2', 'phone2',"
+                       " 'notes', 0000000)")
+        self.connection.commit()
+        cursor.close()
+
+    def create_group(self):
+        cursor = self.connection.cursor()
+        cursor.execute("INSERT INTO group_list(group_name, group_footer, group_header, deprecated) "
+                       "VALUES('group_name', 'group_footer', 'group_header', 00000)")
         self.connection.commit()
         cursor.close()
 
