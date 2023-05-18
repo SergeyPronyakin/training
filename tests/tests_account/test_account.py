@@ -3,7 +3,6 @@ import random
 from model.account import AccountData
 from fixture.orm import ORMFixture
 
-new_group_id = None
 orm = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
 
 
@@ -194,20 +193,30 @@ def test_assert_accounts_from_home_page_with_db_data(app, db):
                                                                               key=AccountData.id_or_max)
 
 
-def test_add_account_to_group(app, db):
-    global new_group_id
-    if not db.get_groups():
-        new_group = db.create_group()
-        new_group_id = new_group[0].id
+def test_add_new_account_to_created_group(app, db):
+    group = db.create_group()[0]
+    assert len(orm.get_contacts_in_group(group)) == 0
 
-    new_account = app.account_helper.create_account(AccountData())
-    group_id = new_account.account_group_id
-    group_list = orm.get_contact_list()
-    for group in group_list:
-        if group.id == group_id:
-            contacts_in_group = orm.get_contacts_in_group(group)
-            print(contacts_in_group)
+    app.account_helper.create_account(AccountData(),group.id)
+
+    new_account_in_group = orm.get_contacts_in_group(group)
+
+    def check_account_id():
+        new_contact_id = new_account_in_group[0].id
+        account_list = db.get_accounts()
+        for account in account_list:
+            if str(account.id) == new_contact_id:
+                return True
+
+    assert check_account_id() is True
 
 
-def test_delete_account_from_group():
-    pass
+def test_delete_account_from_group(app, db):
+    group = db.create_group()[0]
+    app.account_helper.create_account(AccountData(), group.id)
+    account_id = orm.get_contacts_in_group(group)[0].id
+
+    app.account_helper.delete_account_by_id(str(account_id))
+
+    assert len(orm.get_contacts_in_group(group)) == 0
+

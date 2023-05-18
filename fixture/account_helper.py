@@ -115,7 +115,6 @@ class AccountHelper:
 
         for account in accounts:
             account_id = account.get_attribute("id")
-            print(account_id)
             if account_id == id:
                 account.click()
         wd.find_element_by_xpath('//input[@value="Delete"]').click()
