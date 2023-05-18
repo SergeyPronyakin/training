@@ -38,7 +38,7 @@ class AccountHelper:
         wd = self.app.wd
         self.page_opener.open_page_with_check()
         wd.find_element_by_link_text("add new").click()
-        self.select_account_group(group_id)
+        account_group_id = self.select_account_group(group_id)
         if account.firstname:
             self.input_text_in_field(account.firstname, "firstname")
         if account.lastname:
@@ -63,7 +63,8 @@ class AccountHelper:
         return AccountData(firstname=account.firstname, lastname=account.lastname,
                            address=account.address, home_phone=account.home_phone,
                            mobile=account.mobile, work_phone=account.work_phone,
-                           email=account.email, email2=account.email2, email3=account.email3)
+                           email=account.email, email2=account.email2, email3=account.email3,
+                           account_group_id=account_group_id)
 
     def return_to_the_home_page(self):
         wd = self.app.wd

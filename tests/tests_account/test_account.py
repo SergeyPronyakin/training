@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import random
 from model.account import AccountData
+from fixture.orm import ORMFixture
 
 new_group_id = None
+orm = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
 
 
 def test_create_account(app, db, json_accounts, check_ui):
@@ -188,7 +190,8 @@ def test_assert_accounts_from_home_page_with_db_data(app, db):
                         all_emails_from_home_page=acc.all_emails_from_home_page,
                         all_phones_from_home_page=acc.all_phones_from_home_page))
 
-    assert sorted(accounts_from_ui_list, key=AccountData.id_or_max) == sorted(accounts_from_db_list, key=AccountData.id_or_max)
+    assert sorted(accounts_from_ui_list, key=AccountData.id_or_max) == sorted(accounts_from_db_list,
+                                                                              key=AccountData.id_or_max)
 
 
 def test_add_account_to_group(app, db):
@@ -197,7 +200,13 @@ def test_add_account_to_group(app, db):
         new_group = db.create_group()
         new_group_id = new_group[0].id
 
-    app.account_helper.create_account(AccountData())
+    new_account = app.account_helper.create_account(AccountData())
+    group_id = new_account.account_group_id
+    group_list = orm.get_contact_list()
+    for group in group_list:
+        if group.id == group_id:
+            contacts_in_group = orm.get_contacts_in_group(group)
+            print(contacts_in_group)
 
 
 def test_delete_account_from_group():

@@ -7,7 +7,7 @@ class AccountData:
     def __init__(self, firstname=None, lastname=None,
                  all_phones_from_home_page=None, mobile=None, home_phone=None,
                  work_phone=None, all_emails_from_home_page=None, email=None, email2=None, email3=None,
-                 address=None, id=None):
+                 address=None, id=None, account_group_id=None):
         self.firstname = firstname
         self.lastname = lastname
         self.all_emails_from_home_page = all_emails_from_home_page
@@ -20,6 +20,7 @@ class AccountData:
         self.work_phone = work_phone
         self.address = address
         self.id = id
+        self.account_group_id = account_group_id
 
     def __repr__(self):
         return "%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s:%s" % (
