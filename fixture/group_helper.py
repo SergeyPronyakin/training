@@ -161,3 +161,56 @@ class GroupHelper:
 
     def get_groups(self):
         return [GroupData(name=name, id=value) for name, value in zip(self.get_group_names(), self.get_group_values())]
+
+    def get_groups_option(self):
+        groups_option_list = []
+        wd = self.app.wd
+        self.page_opener.open_page_with_check()
+        wd.find_element_by_name("group").click()
+        groups_option = wd.find_elements_by_xpath("/html/body/div/div[4]/form[1]/select/option")
+        for group in groups_option:
+            id = group.get_attribute("value")
+            name = group.text
+            groups_option_list.append(GroupData(id=id, name=name))
+        print("Groups option: " + str(groups_option_list))
+        return groups_option_list, groups_option
+
+    def select_account_group(self, group_id, group_name=None):
+        if group_name:
+            for group in self.get_groups_option()[1]:
+                if group.text == group_name:
+                    group.click()
+
+        for group in self.get_groups_option()[1]:
+            id = group.get_attribute("value")
+            if id == group_id:
+                group.click()
+
+    def get_add_to_option(self):
+        add_to_option_list = []
+        wd = self.app.wd
+        self.page_opener.open_page_with_check()
+        wd.find_element_by_name("to_group").click()
+        add_to_option = wd.find_elements_by_xpath("/html/body/div/div[4]/form[2]/div[4]/select/option")
+        for group in add_to_option:
+            id = group.get_attribute("value")
+            name = group.text
+            add_to_option_list.append(GroupData(id=id, name=name))
+        return add_to_option_list, add_to_option
+
+    def select_add_to_option(self, group_id=None, group_name=None):
+        if group_name:
+            for group in self.get_add_to_option()[1]:
+                print(f"group name text={group.text}")
+                if group.text == group_name:
+                    group.click()
+                    break
+
+        for group in self.get_add_to_option()[1]:
+            id = group.get_attribute("value")
+            if id == group_id:
+                group.click()
+
+        wd = self.app.wd
+        self.page_opener.open_page_with_check()
+        wd.find_element_by_name("add").click()

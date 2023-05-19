@@ -337,3 +337,12 @@ class AccountHelper:
                 id = group_list[random_index].get_attribute("value")
                 group_list[random_index].click()
                 return id
+
+    def select_random_account(self):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check()
+        accounts = wd.find_elements_by_name('selected[]')
+        account = random.choice(accounts)
+        account_id = account.get_attribute("id")
+        account.click()
+        return AccountData(id=account_id)

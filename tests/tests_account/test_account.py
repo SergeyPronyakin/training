@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import random
+import time
+
 from model.account import AccountData
 from fixture.orm import ORMFixture
+from model.group import GroupData
 
 orm = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
 
@@ -193,22 +196,25 @@ def test_assert_accounts_from_home_page_with_db_data(app, db):
                                                                               key=AccountData.id_or_max)
 
 
-def test_add_new_account_to_created_group(app, db):
-    group = db.create_group()[0]
-    assert len(orm.get_contacts_in_group(group)) == 0
+def test_add_random_account_to_random_group(app, db):
+    db.delete_all_data_from_table("address_in_groups")
+    if not db.get_groups():
+        app.group_helper.create_group(GroupData(name="group name"))
+    if not db.get_accounts():
+        app.account_helper.create_account(AccountData(firstname="firstname"))
 
-    app.account_helper.create_account(AccountData(),group.id)
+    random_group = random.choice(app.group_helper.get_add_to_option()[0])
+    random_account = app.account_helper.select_random_account()
 
-    new_account_in_group = orm.get_contacts_in_group(group)
+    app.group_helper.select_add_to_option(group_id=random_group.id)
 
-    def check_account_id():
-        new_contact_id = new_account_in_group[0].id
-        account_list = db.get_accounts()
-        for account in account_list:
-            if str(account.id) == new_contact_id:
-                return True
+    accounts_in_group = orm.get_contacts_in_group(random_group)
 
-    assert check_account_id() is True
+    accounts_in_group_list = []
+    for account in accounts_in_group:
+        accounts_in_group_list.append(account.id)
+
+    assert random_account.id in accounts_in_group_list
 
 
 def test_delete_account_from_group(app, db):
@@ -219,4 +225,7 @@ def test_delete_account_from_group(app, db):
     app.account_helper.delete_account_by_id(str(account_id))
 
     assert len(orm.get_contacts_in_group(group)) == 0
+    # Выбираем группу из списка
+    # Смотрим что осталось
+
 

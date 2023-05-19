@@ -68,5 +68,13 @@ class DbFixture:
             cursor.close()
         return group
 
+    def delete_all_data_from_table(self, table_name):
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(f"DELETE FROM {table_name}")
+            self.connection.commit()
+        finally:
+            cursor.close()
+
     def destroy(self):
         self.connection.close()
