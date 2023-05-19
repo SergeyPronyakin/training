@@ -203,6 +203,7 @@ def test_add_random_account_to_random_group(app, db):
     if not db.get_accounts():
         app.account_helper.create_account(AccountData(firstname="firstname"))
 
+    # Add contact to group
     random_group = random.choice(app.group_helper.get_add_to_option()[0])
     random_account = app.account_helper.select_random_account()
 
@@ -216,16 +217,7 @@ def test_add_random_account_to_random_group(app, db):
 
     assert random_account.id in accounts_in_group_list
 
-
-def test_delete_account_from_group(app, db):
-    group = db.create_group()[0]
-    app.account_helper.create_account(AccountData(), group.id)
-    account_id = orm.get_contacts_in_group(group)[0].id
-
-    app.account_helper.delete_account_by_id(str(account_id))
-
-    assert len(orm.get_contacts_in_group(group)) == 0
-    # Выбираем группу из списка
-    # Смотрим что осталось
-
+    # Remove contact from group
+    app.group_helper.delete_account_from_group(group_id=random_group.id, account_id=random_account.id)
+    assert random_account.id not in accounts_in_group_list
 

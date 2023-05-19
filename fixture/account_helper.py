@@ -346,3 +346,13 @@ class AccountHelper:
         account_id = account.get_attribute("id")
         account.click()
         return AccountData(id=account_id)
+
+    def select_account_by_id(self, id):
+        wd = self.app.wd
+        # self.page_opener.open_page_with_check()
+        accounts = wd.find_elements_by_name('selected[]')
+        for account in accounts:
+            account_id = account.get_attribute("id")
+            if account_id == id:
+                account.click()
+                return AccountData(id=account_id)

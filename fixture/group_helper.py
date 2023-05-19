@@ -1,8 +1,11 @@
+import time
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from fixture.openers.page_opener import PageOpener
 from model.group import GroupData
+from fixture.account_helper import AccountHelper
 
 
 class GroupHelper:
@@ -12,6 +15,7 @@ class GroupHelper:
     def __init__(self, app):
         self.app = app
         self.page_opener = PageOpener(app)
+        self.account_helper = AccountHelper(app)
 
     def input_text_in_fields(self, text, selector_name):
         wd = self.app.wd
@@ -214,3 +218,11 @@ class GroupHelper:
         wd = self.app.wd
         self.page_opener.open_page_with_check()
         wd.find_element_by_name("add").click()
+
+    def delete_account_from_group(self, group_id, account_id):
+        wd = self.app.wd
+        self.page_opener.open_page_with_check()
+        self.select_account_group(group_id)
+        self.account_helper.select_account_by_id(account_id)
+        wd.find_element_by_name("remove").click()
+
