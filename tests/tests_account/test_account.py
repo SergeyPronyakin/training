@@ -220,4 +220,3 @@ def test_add_random_account_to_random_group(app, db):
     # Remove contact from group
     app.group_helper.delete_account_from_group(group_id=random_group.id, account_id=random_account.id)
     assert random_account.id not in accounts_in_group_list
-
