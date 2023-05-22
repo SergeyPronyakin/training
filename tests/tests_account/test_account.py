@@ -204,19 +204,38 @@ def test_add_random_account_to_random_group(app, db):
         app.account_helper.create_account(AccountData(firstname="firstname"))
 
     # Add contact to group
-    random_group = random.choice(app.group_helper.get_add_to_option()[0])
-    random_account = app.account_helper.select_random_account()
-
-    app.group_helper.select_add_to_option(group_id=random_group.id)
-
-    accounts_in_group = orm.get_contacts_in_group(random_group)
-
-    accounts_in_group_list = []
-    for account in accounts_in_group:
-        accounts_in_group_list.append(account.id)
+    add_contact_to_group_data = add_contact_to_group(app)
+    random_account = add_contact_to_group_data[1]
+    accounts_in_group_list = add_contact_to_group_data[2]
 
     assert random_account.id in accounts_in_group_list
+
+
+def test_remove_account_from_group(app, db):
+    db.delete_all_data_from_table("address_in_groups")
+    if not db.get_groups():
+        app.group_helper.create_group(GroupData(name="group name"))
+    if not db.get_accounts():
+        app.account_helper.create_account(AccountData(firstname="firstname"))
+
+    # Add contact to group
+    add_contact_to_group_data = add_contact_to_group(app)
+    random_group = add_contact_to_group_data[0]
+    accounts_in_group_list = add_contact_to_group_data[2]
+    random_account = add_contact_to_group_data[1]
 
     # Remove contact from group
     app.group_helper.delete_account_from_group(group_id=random_group.id, account_id=random_account.id)
     assert random_account.id not in accounts_in_group_list
+
+
+def add_contact_to_group(app):
+    # Add contact to group
+    random_group = random.choice(app.group_helper.get_add_to_option()[0])
+    random_account = app.account_helper.select_random_account()
+    app.group_helper.select_add_to_option(group_id=random_group.id)
+    accounts_in_group = orm.get_contacts_in_group(random_group)
+    accounts_in_group_list = []
+    for account in accounts_in_group:
+        accounts_in_group_list.append(account.id)
+    return random_group, random_account, accounts_in_group_list

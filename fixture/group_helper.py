@@ -11,6 +11,8 @@ from fixture.account_helper import AccountHelper
 class GroupHelper:
     GROUP_PAGE = "group.php"
     group_cache = None
+    groups_option = None
+    groups_option_list = []
 
     def __init__(self, app):
         self.app = app
@@ -167,19 +169,19 @@ class GroupHelper:
         return [GroupData(name=name, id=value) for name, value in zip(self.get_group_names(), self.get_group_values())]
 
     def get_groups_option(self):
-        groups_option_list = []
         wd = self.app.wd
         self.page_opener.open_page_with_check()
         wd.find_element_by_name("group").click()
-        groups_option = wd.find_elements_by_xpath("/html/body/div/div[4]/form[1]/select/option")
-        for group in groups_option:
+        self.groups_option = wd.find_elements_by_xpath("/html/body/div/div[4]/form[1]/select/option")
+        for group in self.groups_option:
             id = group.get_attribute("value")
             name = group.text
-            groups_option_list.append(GroupData(id=id, name=name))
-        print("Groups option: " + str(groups_option_list))
-        return groups_option_list, groups_option
+            self.groups_option_list.append(GroupData(id=id, name=name))
+        print("Groups option: " + str(self.groups_option_list))
+        return self.groups_option_list, self.groups_option
 
     def select_account_group(self, group_id, group_name=None):
+        self.groups_option_list = []
         if group_name:
             for group in self.get_groups_option()[1]:
                 if group.text == group_name:
@@ -225,4 +227,3 @@ class GroupHelper:
         self.select_account_group(group_id)
         self.account_helper.select_account_by_id(account_id)
         wd.find_element_by_name("remove").click()
-
