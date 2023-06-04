@@ -1,0 +1,7 @@
+PyMySQL
+attrs
+jsonpickle
+pony
+pytest
+selenium=3.141.0
+urllib3=1.26.15
